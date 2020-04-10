@@ -9,14 +9,15 @@ namespace Assets.GameLogic
     {
         public UnitClasses.UnitOutline outline;
         public Sprite sprite;
-        public UnitType type;
-        public string unitName;
-        public int maxHealth;
-        public int attackPower;
-        public int speed;
-        public int range;
-        public int price;
-        public string description;
+        [SerializeField] private UnitType type;
+        [SerializeField] private string unitName;
+        [SerializeField] private int maxHealth;
+        [SerializeField] private int basicAttackPower;        
+        [SerializeField] private int speed;
+        [SerializeField] private int range;
+        [SerializeField] private int price;
+        [SerializeField] private string description;
+        private int attackPower;
         private int health;
         private bool isActive;
         private bool wasMoved;
@@ -24,7 +25,7 @@ namespace Assets.GameLogic
 
         public enum UnitType
         {
-            Warrior, Archer, Mage
+            Light, Dark
         }
 
         private void Awake()
@@ -143,6 +144,20 @@ namespace Assets.GameLogic
         {
             statHUD.faceColor = new Color(1f, 200 / 256f, 0f, 1f);
             statHUD.outlineColor = new Color(168 / 256f, 150 / 256f, 36 / 256f, 1f);
+        }
+
+        public object[] GetUnitInfo()
+        {
+            object[] info = new object[8];
+            info[0] = sprite;
+            info[1] = unitName;
+            info[2] = maxHealth.ToString();
+            info[3] = basicAttackPower.ToString();
+            info[4] = range.ToString();
+            info[5] = speed.ToString();
+            info[6] = price.ToString();
+            info[7] = description;
+            return info;
         }
 
         void ToDie()

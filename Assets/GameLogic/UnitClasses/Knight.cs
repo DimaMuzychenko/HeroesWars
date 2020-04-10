@@ -2,7 +2,7 @@
 
 namespace Assets.GameLogic
 {
-    public class Warrior : Unit
+    public class Knight : Unit
     {
                 
     }

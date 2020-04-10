@@ -16,11 +16,11 @@ namespace Assets.GameLogic
         {
             Vector3 position = cellSelction.GetSelectedCell().transform.position;
             Unit newUnit = unitFactory.SpawnUnit(type, position);
-            if (cellSelction.GetSelectedCell().type == Cell.CellType.LPortal)
+            if (cellSelction.GetSelectedCell().type == Cell.CellType.LightPortal)
             {
                 units.AddToLeft(newUnit);
             }
-            else if (cellSelction.GetSelectedCell().type == Cell.CellType.RPortal)
+            else if (cellSelction.GetSelectedCell().type == Cell.CellType.DarkPortal)
             {
                 units.AddToRight(newUnit);
             }

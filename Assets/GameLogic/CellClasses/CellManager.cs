@@ -46,7 +46,7 @@ namespace Assets.GameLogic.CellClasses
             int lPortalsCount = 0;
             foreach(Cell cell in cells)
             {
-                if(cell.type == Cell.CellType.LPortal)
+                if(cell.type == Cell.CellType.LightPortal)
                 {
                     lPortalsCount++;
                 }
@@ -55,7 +55,7 @@ namespace Assets.GameLogic.CellClasses
         }
         public int RightPortalCount()
         {
-            return cells.FindAll(cell => cell.type == Cell.CellType.RPortal).Count;
+            return cells.FindAll(cell => cell.type == Cell.CellType.DarkPortal).Count;
         }
 
         public void CapturePortal(Vector3 portalPosition)

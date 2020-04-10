@@ -16,8 +16,9 @@ public class SpawnMenu : MonoBehaviour
     public ToggleGroup toggles;
     [SerializeField] private Unit[] units;
 
+    //selected unit's info    
     [SerializeField] private Image image;
-    [SerializeField] private TextMeshProUGUI typeInfoT;
+    [SerializeField] private TextMeshProUGUI unitNameT;
     [SerializeField] private TextMeshProUGUI healthInfoT;
     [SerializeField] private TextMeshProUGUI attackPowerInfoT;
     [SerializeField] private TextMeshProUGUI attackRangeInfoT;
@@ -59,14 +60,15 @@ public class SpawnMenu : MonoBehaviour
 
     private void UpdateInfo()
     {
-        image.sprite = selectedUnit.sprite;
-        typeInfoT.text = selectedUnit.type.ToString();
-        healthInfoT.text = selectedUnit.maxHealth.ToString();
-        attackPowerInfoT.text = selectedUnit.attackPower.ToString();
-        attackRangeInfoT.text = selectedUnit.range.ToString();
-        speedInfoT.text = selectedUnit.speed.ToString();
-        priceInfoT.text = selectedUnit.price.ToString();
-        descriptionT.text = selectedUnit.description;
+        object[] info = selectedUnit.GetUnitInfo();
+        image.sprite = (Sprite)info[0];
+        unitNameT.text = (string)info[1];
+        healthInfoT.text = (string)info[2];
+        attackPowerInfoT.text = (string)info[3];
+        attackRangeInfoT.text = (string)info[4];
+        speedInfoT.text = (string)info[5];
+        priceInfoT.text = (string)info[6];
+        descriptionT.text = (string)info[7];
 
         if (selectedUnit.GetPrice() > gameUI.GetCurrentPlayerEnergy())
         {

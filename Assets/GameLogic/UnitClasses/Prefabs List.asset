@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18450400816e374419744358abe0fa47, type: 3}
   m_Name: Prefabs List
   m_EditorClassIdentifier: 
-  leftUnits:
+  lightUnits:
   - {fileID: 114845019313970756, guid: f56dcd118d8f4b44cadabd87810c8264, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  rightUnits:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: -7292787404833093892, guid: ac27676d1515f6d4fae71c9c94715993, type: 3}
+  - {fileID: -9105655473997791043, guid: 1d162358cf2adba448f434079ab352e3, type: 3}
+  darkUnits:
+  - {fileID: 2681651288566040218, guid: c73f5a1cfe0cc774090bf88a6035b1cd, type: 3}
+  - {fileID: 3740099069831560198, guid: 24806c29247aa2145b8fee067dbfd5a1, type: 3}
+  - {fileID: 114290249709059310, guid: 4f624aa3b85f311469b89ed35613246a, type: 3}

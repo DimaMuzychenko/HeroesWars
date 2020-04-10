@@ -62,13 +62,13 @@ namespace Assets.GameLogic
 
                 if (currentPlayer == TurnCounter.Player.Right) return Target.FriendUnit;
             }
-            else if (cellManager.GetCell(targetPosition).type == Cell.CellType.LPortal)
+            else if (cellManager.GetCell(targetPosition).type == Cell.CellType.LightPortal)
             {
                 if (currentPlayer == TurnCounter.Player.Left) return Target.FriendPortal;
 
                 if (currentPlayer == TurnCounter.Player.Right) return Target.EnemyPortal;
             }
-            else if (cellManager.GetCell(targetPosition).type == Cell.CellType.RPortal)
+            else if (cellManager.GetCell(targetPosition).type == Cell.CellType.DarkPortal)
             {
                 if (currentPlayer == TurnCounter.Player.Left) return Target.EnemyPortal;
 
@@ -253,14 +253,14 @@ namespace Assets.GameLogic
                     }
                 }
             }
-            if(TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.RPortal)
+            if(TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.DarkPortal)
             {
                 if(!gameUI.IsButtonSwiched())
                 {
                     gameUI.SwitchMainButton();
                 }
             }
-            if (!TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.LPortal)
+            if (!TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.LightPortal)
             {
                 if (!gameUI.IsButtonSwiched())
                 {

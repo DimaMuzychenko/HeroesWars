@@ -5,27 +5,27 @@ namespace Assets.GameLogic.UnitClasses
     [CreateAssetMenu]
     class PrefabsList : ScriptableObject
     {
-        [SerializeField] private Unit[] leftUnits;
-        [SerializeField] private Unit[] rightUnits;
+        [SerializeField] private Unit[] lightUnits;
+        [SerializeField] private Unit[] darkUnits;
 
         public Unit GetLeftUnit(Unit.UnitType type)
         {
-            return leftUnits[(int)type];
+            return lightUnits[(int)type];
         }
 
         public Unit GetRightUnit(Unit.UnitType type)
         {
-            return rightUnits[(int)type];
+            return darkUnits[(int)type];
         }
 
         public Unit[] GetAllLeftUnits()
         {
-            return leftUnits;
+            return lightUnits;
         }
 
         public Unit[] GetAllRightUnits()
         {
-            return rightUnits;
+            return darkUnits;
         }
     }
 }

@@ -8,15 +8,7 @@ namespace Assets.GameLogic.CellClasses
         public CellType type;
         public enum CellType
         {
-            Portal, LPortal, RPortal, Grass, Send, Rock
-        }
-
-        private void OnMouseUp()
-        {
-            if(!EventSystem.current.IsPointerOverGameObject())
-            {
-                GameEvents.GetInstance().CellClicked(transform.position);
-            }
+            Portal, LightPortal, DarkPortal, Grass, Send, Rock
         }
     }
 }

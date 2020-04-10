@@ -2,7 +2,7 @@
 
 namespace Assets.GameLogic
 {
-    class Mage : Unit
+    class Warlock : Unit
     {
 
     }
