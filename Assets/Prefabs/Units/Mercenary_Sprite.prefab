@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6056448380708126887}
   - component: {fileID: 3847473824857130196}
-  - component: {fileID: 2681651288566040218}
+  - component: {fileID: -4540723351437905675}
   - component: {fileID: 8988419623628644029}
   m_Layer: 0
   m_Name: Mercenary_Sprite
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!114 &2681651288566040218
+--- !u!114 &-4540723351437905675
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 423781062016634609}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bb5825d5a8ccad4bbdf4b14865ed1ba, type: 3}
+  m_Script: {fileID: 11500000, guid: 353db198ee330a64eb7eeedcb385ab6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   outline: {fileID: 8988419623628644029}
@@ -102,7 +102,7 @@ MonoBehaviour:
   type: 1
   unitName: Mercenary
   maxHealth: 150
-  basicAttackPower: 0
+  basicAttackPower: 30
   speed: 2
   range: 1
   price: 100
@@ -131,6 +131,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: StatusHUD
       objectReference: {fileID: 0}
+    - target: {fileID: 4153841990366984177, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 4153841990366984177, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.09
+      objectReference: {fileID: 0}
     - target: {fileID: 5170959182965693324, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
       propertyPath: m_textInfo.characterCount
       value: 3
@@ -147,13 +155,17 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5170959182965693324, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7057625461572561298, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.43
+      value: -1.63
       objectReference: {fileID: 0}
     - target: {fileID: 7057625461572561298, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.82
+      value: -0.72
       objectReference: {fileID: 0}
     - target: {fileID: 7057625461572561298, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
       propertyPath: m_LocalPosition.z

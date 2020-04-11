@@ -235,7 +235,8 @@ namespace Assets.GameLogic
             {
                 HideActions();
             }
-            IsActionShown = true;
+            if(unitSelection.GetSelectedUnit().IsActive())
+                IsActionShown = true;
             foreach (Cell cell in cellManager.GetAllCells())
             {
                 if (cell != null)
@@ -243,10 +244,10 @@ namespace Assets.GameLogic
                     if (!CanRich(cell) && !unitSelection.GetSelectedUnit().WasMoved())
                     {
                         cell.GetComponent<Renderer>().material.color = new Color(100 / 255f, 100 / 255f, 100 / 255f);
-                    }                    
+                    }
                 }
             }
-            if(unitsList.GetAllEnemies().Length > 0)
+            if (unitsList.GetAllEnemies().Length > 0)
             {
                 foreach (Unit unit in unitsList.GetAllEnemies())
                 {
@@ -258,9 +259,9 @@ namespace Assets.GameLogic
                     }
                 }
             }
-            if(TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.DarkPortal)
+            if (TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.DarkPortal)
             {
-                if(!gameUI.IsButtonSwiched())
+                if (!gameUI.IsButtonSwiched())
                 {
                     gameUI.SwitchMainButton();
                 }

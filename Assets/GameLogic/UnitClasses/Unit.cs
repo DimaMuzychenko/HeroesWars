@@ -32,6 +32,7 @@ namespace Assets.GameLogic
         {
             statHUD = GetComponentInChildren<TextMeshProUGUI>();            
             outline.RemoveOutline();
+            attackPower = basicAttackPower;
             health = maxHealth;
             statHUD.text = health.ToString();
             MakeFriendlyStatHUD();

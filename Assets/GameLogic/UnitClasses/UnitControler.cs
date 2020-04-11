@@ -16,10 +16,10 @@ namespace Assets.GameLogic
             cellSelction = CellSelection.GetInstance();
         }
 
-        public void SpawnUnit(Unit.UnitType type)
+        public void SpawnUnit(string name)
         {
             Vector3 position = cellSelction.GetSelectedCell().transform.position;
-            Unit newUnit = unitFactory.SpawnUnit(type, position);
+            Unit newUnit = unitFactory.SpawnUnit(name, position);
             if (cellSelction.GetSelectedCell().type == Cell.CellType.LightPortal)
             {
                 units.AddToLeft(newUnit);

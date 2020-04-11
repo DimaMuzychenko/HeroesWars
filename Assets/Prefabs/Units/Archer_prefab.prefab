@@ -102,7 +102,7 @@ MonoBehaviour:
   type: 0
   unitName: Archer
   maxHealth: 120
-  attackPower: 50
+  basicAttackPower: 50
   speed: 2
   range: 2
   price: 150
@@ -147,13 +147,25 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5170959182965693324, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 5170959182965693324, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 5170959182965693324, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
+      propertyPath: m_textAlignment
+      value: 65535
+      objectReference: {fileID: 0}
     - target: {fileID: 7057625461572561298, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.65
+      value: 0.71
       objectReference: {fileID: 0}
     - target: {fileID: 7057625461572561298, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.7
+      value: -0.82
       objectReference: {fileID: 0}
     - target: {fileID: 7057625461572561298, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
       propertyPath: m_LocalPosition.z

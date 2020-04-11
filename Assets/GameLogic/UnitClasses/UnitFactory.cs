@@ -7,16 +7,16 @@ namespace Assets.GameLogic
     public class UnitFactory : ScriptableObject
     {
         [SerializeField] private PrefabsList prefabsList;
-        public Unit SpawnUnit(Unit.UnitType type, Vector3 position)
+        public Unit SpawnUnit(string name, Vector3 position)
         {
             Unit instance;
             if (TurnCounter.GetInstance().FirstPlayerTurn())
             {
-                instance = Instantiate(prefabsList.GetLeftUnit(type));
+                instance = Instantiate(prefabsList.GetLeftUnit(name));
             }
             else
             {
-                instance = Instantiate(prefabsList.GetRightUnit(type));
+                instance = Instantiate(prefabsList.GetRightUnit(name));
             }
             instance.transform.position = position;
             return instance;

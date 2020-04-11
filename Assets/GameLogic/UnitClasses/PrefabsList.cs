@@ -8,14 +8,26 @@ namespace Assets.GameLogic.UnitClasses
         [SerializeField] private Unit[] lightUnits;
         [SerializeField] private Unit[] darkUnits;
 
-        public Unit GetLeftUnit(Unit.UnitType type)
+        public Unit GetLeftUnit(string name)
         {
-            return lightUnits[(int)type];
+            foreach(Unit unit in lightUnits)
+            {
+                if (unit.GetUnitInfo()[1].ToString() == name)
+                    return unit;
+            }
+            return lightUnits[0];
         }
 
-        public Unit GetRightUnit(Unit.UnitType type)
+        public Unit GetRightUnit(string name)
         {
-            return darkUnits[(int)type];
+            foreach(Unit unit in darkUnits)
+            {
+                if(unit.GetUnitInfo()[1].ToString() == name)
+                {
+                    return unit;
+                }
+            }
+            return darkUnits[0];
         }
 
         public Unit[] GetAllLeftUnits()

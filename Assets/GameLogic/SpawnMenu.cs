@@ -12,7 +12,7 @@ public class SpawnMenu : MonoBehaviour
     [SerializeField] private GameUI gameUI;
     [SerializeField] private PrefabsList prefabsList;
     [SerializeField] private Button summonBT;
-    [SerializeField] private Unit[] units;
+    private Unit[] units;
     private Unit selectedUnit;
     private Image[] images = new Image[6];
 
@@ -53,19 +53,22 @@ public class SpawnMenu : MonoBehaviour
 
     public void SelectUnit()
     {
-        for(int i = 0; i < toggles.GetComponentsInChildren<Toggle>().Length; i++)
+        for(int i = 0; i < 3; i++)
         {
             if(toggles.GetComponentsInChildren<Toggle>()[i].isOn)
             {
+                Debug.Log(i);
                 selectedUnit = units[i];
+                break;
             }
         }
+        Debug.Log(selectedUnit.GetUnitInfo()[1]);
         UpdateInfo();
     }
 
     public void SpawnUnit()
     {
-        unitControler.SpawnUnit(selectedUnit.GetUnitType());
+        unitControler.SpawnUnit(selectedUnit.GetUnitInfo()[1].ToString());
         gameUI.SpendEnergy(selectedUnit.GetPrice());
         Close();
     }
@@ -74,6 +77,7 @@ public class SpawnMenu : MonoBehaviour
     {
         object[] info = selectedUnit.GetUnitInfo();
         image.sprite = (Sprite)info[0];
+        image.preserveAspect = true;
         unitNameT.text = (string)info[1];
         healthInfoT.text = (string)info[2];
         attackPowerInfoT.text = (string)info[3];
@@ -123,6 +127,7 @@ public class SpawnMenu : MonoBehaviour
         for(int i = 0; i < 3; i++)
         {
             images[i].sprite = units[i].sprite;
+            images[i].preserveAspect = true;
         }
     }
 }
