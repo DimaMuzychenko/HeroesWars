@@ -53,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 86fcc9347d465b2428be88313e7c478c, type: 2}
+  - {fileID: 2100000, guid: 2a76e6d6198a8e844893a172d9bc25eb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -102,7 +102,7 @@ MonoBehaviour:
   type: 1
   unitName: Mercenary
   maxHealth: 150
-  attackPower: 40
+  basicAttackPower: 0
   speed: 2
   range: 1
   price: 100

@@ -13,26 +13,26 @@ namespace Assets.GameLogic.UnitClasses
 
         private void Awake()
         {
-            UpdateStatusHUD(noColor);
+            UpdateOutline(noColor);
         }
 
         public void OutlineAsFriend()
         {
-            UpdateStatusHUD(friendColor);            
+            UpdateOutline(friendColor);            
         }
 
         public void OutlineAsEnemy()
         {
-            UpdateStatusHUD(enemyColor);            
+            UpdateOutline(enemyColor);            
         }
 
         public void RemoveOutline()
         {
-            UpdateStatusHUD(noColor);
+            UpdateOutline(noColor);
         }
 
 
-        void UpdateStatusHUD(Color color)
+        void UpdateOutline(Color color)
         {
             MaterialPropertyBlock mpb = new MaterialPropertyBlock();
             spriteRenderer.GetPropertyBlock(mpb);

@@ -9,8 +9,12 @@ namespace Assets.GameLogic
         [SerializeField] UnitsList units;
         [SerializeField] UnitFactory unitFactory;
         [SerializeField] UnitSelection unitSelection;
-        [SerializeField] CellSelection cellSelction;
+        CellSelection cellSelction;
 
+        private void Awake()
+        {
+            cellSelction = CellSelection.GetInstance();
+        }
 
         public void SpawnUnit(Unit.UnitType type)
         {

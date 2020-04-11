@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0604972ef34704e4988cac1b7a131837, type: 2}
+  - {fileID: 2100000, guid: cca05ae84c910264e8f34d7d9c8d9e9a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
   type: 1
   unitName: Sniper
   maxHealth: 120
-  attackPower: 50
+  basicAttackPower: 0
   speed: 2
   range: 2
   price: 150

@@ -7,14 +7,14 @@ using TMPro;
 public class SpawnMenu : MonoBehaviour
 {
     public static bool isActive = false;
-    private Unit selectedUnit;
-
+    public ToggleGroup toggles;    
     [SerializeField] private UnitControler unitControler;
     [SerializeField] private GameUI gameUI;
     [SerializeField] private PrefabsList prefabsList;
     [SerializeField] private Button summonBT;
-    public ToggleGroup toggles;
     [SerializeField] private Unit[] units;
+    private Unit selectedUnit;
+    private Image[] images = new Image[6];
 
     //selected unit's info    
     [SerializeField] private Image image;
@@ -25,6 +25,18 @@ public class SpawnMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI speedInfoT;
     [SerializeField] private TextMeshProUGUI priceInfoT;
     [SerializeField] private TextMeshProUGUI descriptionT;
+
+    private void Awake()
+    {
+        for(int i = 0; i < toggles.GetComponentsInChildren<Toggle>().Length; i++)
+        {
+            foreach (Image image in toggles.GetComponentsInChildren<Toggle>()[i].GetComponentsInChildren<Image>())
+            {
+                if (image.gameObject.name == "Image")
+                    images[i] = image;
+            }
+        }
+    }
 
     private void OnEnable()
     {
@@ -108,9 +120,9 @@ public class SpawnMenu : MonoBehaviour
         {
             units = prefabsList.GetAllRightUnits();
         }
-        for(int i = 0; i < toggles.GetComponentsInChildren<Image>().Length; i++)
+        for(int i = 0; i < 3; i++)
         {
-            toggles.GetComponentsInChildren<Image>()[i].sprite = units[i].sprite;
+            images[i].sprite = units[i].sprite;
         }
     }
 }

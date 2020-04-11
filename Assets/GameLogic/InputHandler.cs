@@ -18,6 +18,7 @@ public class InputHandler : MonoBehaviour
             {
                 Vector3 inputPosition = grid.CellToWorld(grid.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition)));
                 Debug.Log(inputPosition);
+                GameEvents.GetInstance().CellClicked(inputPosition);
             }
         }
     }

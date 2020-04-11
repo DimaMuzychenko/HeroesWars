@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: aaddf170a97d9b9488cbc792537b56fd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e20680c4f340e3e4fb894b342abe6d34, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,7 +102,7 @@ MonoBehaviour:
   type: 0
   unitName: Knight
   maxHealth: 150
-  attackPower: 40
+  basicAttackPower: 0
   speed: 2
   range: 1
   price: 100

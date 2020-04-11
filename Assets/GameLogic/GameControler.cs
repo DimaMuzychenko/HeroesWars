@@ -8,12 +8,16 @@ namespace Assets.GameLogic
     {
         [SerializeField] SpawnMenu spawnMenu;
         [SerializeField] UnitControler unitControler;
-        [SerializeField] ActionDefiner actionDefiner;
-        [SerializeField] CellSelection cellSelection;
+        [SerializeField] ActionDefiner actionDefiner;        
         [SerializeField] UnitSelection unitSelection;
         [SerializeField] UnitsList unitsList;
         [SerializeField] CellManager cellManager;
+        CellSelection cellSelection;
 
+        private void Awake()
+        {
+            cellSelection = CellSelection.GetInstance();
+        }
         private void Start()
         {
             GameEvents.GetInstance().OnCellClicked += DoAction;            

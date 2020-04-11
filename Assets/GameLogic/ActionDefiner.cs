@@ -6,7 +6,7 @@ namespace Assets.GameLogic
 {
     class ActionDefiner : MonoBehaviour
     {
-        [SerializeField] private CellSelection cellSelection;
+        private CellSelection cellSelection;
         [SerializeField] private UnitSelection unitSelection;
         [SerializeField] private UnitsList unitsList;
         [SerializeField] private CellManager cellManager;
@@ -19,6 +19,11 @@ namespace Assets.GameLogic
         public enum Target
         {
             FriendUnit, EnemyUnit, Cell, FriendPortal, EnemyPortal
+        }
+
+        private void Awake()
+        {
+            cellSelection = CellSelection.GetInstance();
         }
 
         public Action DefineAction(Vector3 targetPosition)

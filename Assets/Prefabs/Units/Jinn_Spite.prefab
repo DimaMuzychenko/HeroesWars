@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f2e32e500336e3647a0d28df06f979bf, type: 2}
+  - {fileID: 2100000, guid: 52d31a906a410284994dc79a03987c9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
   type: 0
   unitName: Jinn
   maxHealth: 100
-  attackPower: 70
+  basicAttackPower: 0
   speed: 2
   range: 2
   price: 200
