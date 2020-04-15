@@ -259,14 +259,14 @@ namespace Assets.GameLogic
                     }
                 }
             }
-            if (TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.DarkPortal)
+            if (TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.DarkPortal || cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.Portal)
             {
                 if (!gameUI.IsButtonSwiched())
                 {
                     gameUI.SwitchMainButton();
                 }
             }
-            if (!TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.LightPortal)
+            if (!TurnCounter.GetInstance().FirstPlayerTurn() && cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.LightPortal || cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position).type == Cell.CellType.Portal)
             {
                 if (!gameUI.IsButtonSwiched())
                 {
