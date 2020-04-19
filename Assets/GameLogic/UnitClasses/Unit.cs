@@ -9,6 +9,7 @@ namespace Assets.GameLogic
     {
         public UnitClasses.UnitOutline outline;
         public Sprite sprite;
+        [SerializeField] private Team team;
         [SerializeField] private UnitType type;
         [SerializeField] private string unitName;
         [SerializeField] private int maxHealth;
@@ -17,15 +18,22 @@ namespace Assets.GameLogic
         [SerializeField] private int range;
         [SerializeField] private int price;
         [SerializeField] private string description;
+        [SerializeField] private float movingSpeed;
         private int attackPower;
         private int health;
         private bool isActive;
         private bool wasMoved;
         private TextMeshProUGUI statHUD;
+        
+
+        public enum Team
+        {
+            Light, Dark
+        }
 
         public enum UnitType
         {
-            Light, Dark
+            Ground, Air
         }
 
         private void Awake()
@@ -39,9 +47,9 @@ namespace Assets.GameLogic
             isActive = false;
         }
 
-        public UnitType GetUnitType()
+        public Team GetUnitType()
         {
-            return type;
+            return team;
         }
 
         public void ShowDamage(int value)
@@ -61,8 +69,9 @@ namespace Assets.GameLogic
         
         public void MoveTo(Vector3 destination)
         {
-            transform.position = destination;
             wasMoved = true;
+            transform.position = destination;
+            
         }
 
         public int GetAttackPower()

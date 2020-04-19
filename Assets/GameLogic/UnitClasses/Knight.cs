@@ -4,6 +4,6 @@ namespace Assets.GameLogic
 {
     public class Knight : Unit
     {
-                
+
     }
 }

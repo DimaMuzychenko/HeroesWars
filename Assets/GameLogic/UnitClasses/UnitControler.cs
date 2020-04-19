@@ -33,6 +33,7 @@ namespace Assets.GameLogic
                 
         public void Move(Cell from, Cell to)
         {
+            units.GetUnit(from).MoveTo(to.transform.position);
             bool enemyWithinRange = false;
             foreach(Unit enemy in units.GetAllEnemies())
             {
@@ -45,7 +46,7 @@ namespace Assets.GameLogic
             {
                 unitSelection.GetSelectedUnit().Disactivate();
             }
-            units.GetUnit(from).MoveTo(to.transform.position);
+            
         }
 
         public void Attack(Vector3 targetPosition)
