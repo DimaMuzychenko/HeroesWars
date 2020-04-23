@@ -17,43 +17,57 @@ public class CameraHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.touchCount == 0 && isZooming)
+        if(Input.mousePresent)
         {
-            isZooming = false;
-        }
-
-        if (Input.touchCount == 1)
-        {
-            if (!isZooming)
+            if(Input.GetMouseButton(1))
             {
-                if (Input.GetTouch(0).phase == TouchPhase.Moved)
+                Vector2 NewPosition = GetWorldPosition();
+                Vector2 PositionDifference = NewPosition - StartPosition;
+                camera_GameObject.transform.Translate(-PositionDifference);
+            }
+            StartPosition = GetWorldPosition();
+            Camera.main.orthographicSize += Input.mouseScrollDelta.y;
+        }
+        else
+        {
+            if (Input.touchCount == 0 && isZooming)
+            {
+                isZooming = false;
+            }
+
+            if (Input.touchCount == 1)
+            {
+                if (!isZooming)
                 {
-                    Vector2 NewPosition = GetWorldPosition();
-                    Vector2 PositionDifference = NewPosition - StartPosition;
-                    camera_GameObject.transform.Translate(-PositionDifference);
+                    if (Input.GetTouch(0).phase == TouchPhase.Moved)
+                    {
+                        Vector2 NewPosition = GetWorldPosition();
+                        Vector2 PositionDifference = NewPosition - StartPosition;
+                        camera_GameObject.transform.Translate(-PositionDifference);
+                    }
+                    StartPosition = GetWorldPosition();
                 }
-                StartPosition = GetWorldPosition();
             }
-        }
-        else if (Input.touchCount == 2)
-        {
-            if (Input.GetTouch(1).phase == TouchPhase.Moved)
+            else if (Input.touchCount == 2)
             {
-                isZooming = true;
+                if (Input.GetTouch(1).phase == TouchPhase.Moved)
+                {
+                    isZooming = true;
 
-                DragNewPosition = GetWorldPositionOfFinger(1);
-                Vector2 PositionDifference = DragNewPosition - DragStartPosition;
+                    DragNewPosition = GetWorldPositionOfFinger(1);
+                    Vector2 PositionDifference = DragNewPosition - DragStartPosition;
 
-                if (Vector2.Distance(DragNewPosition, Finger0Position) < DistanceBetweenFingers)
-                    camera_GameObject.GetComponent<Camera>().orthographicSize += (PositionDifference.magnitude);
+                    if (Vector2.Distance(DragNewPosition, Finger0Position) < DistanceBetweenFingers)
+                        camera_GameObject.GetComponent<Camera>().orthographicSize += (PositionDifference.magnitude);
 
-                if (Vector2.Distance(DragNewPosition, Finger0Position) >= DistanceBetweenFingers)
-                    camera_GameObject.GetComponent<Camera>().orthographicSize -= (PositionDifference.magnitude);
+                    if (Vector2.Distance(DragNewPosition, Finger0Position) >= DistanceBetweenFingers)
+                        camera_GameObject.GetComponent<Camera>().orthographicSize -= (PositionDifference.magnitude);
 
-                DistanceBetweenFingers = Vector2.Distance(DragNewPosition, Finger0Position);
+                    DistanceBetweenFingers = Vector2.Distance(DragNewPosition, Finger0Position);
+                }
+                DragStartPosition = GetWorldPositionOfFinger(1);
+                Finger0Position = GetWorldPositionOfFinger(0);
             }
-            DragStartPosition = GetWorldPositionOfFinger(1);
-            Finger0Position = GetWorldPositionOfFinger(0);
         }
     }
 

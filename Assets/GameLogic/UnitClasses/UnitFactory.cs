@@ -10,7 +10,7 @@ namespace Assets.GameLogic
         public Unit SpawnUnit(string name, Vector3 position)
         {
             Unit instance;
-            if (TurnCounter.GetInstance().FirstPlayerTurn())
+            if (PlayerControler.GetInstance().FirstPlayerTurn())
             {
                 instance = Instantiate(prefabsList.GetLeftUnit(name));
             }

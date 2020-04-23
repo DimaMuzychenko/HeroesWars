@@ -1,17 +1,15 @@
 ﻿using System;
 using UnityEngine;
 
-public class GameEvents : MonoBehaviour
+public class GameEvents
 {
     private static GameEvents instance;
 
-    private void Awake()
-    {
-        instance = this;
-    }
 
     public static GameEvents GetInstance()
     {
+        if (instance == null)
+            instance = new GameEvents();
         return instance;
     }
 
@@ -25,7 +23,7 @@ public class GameEvents : MonoBehaviour
     }
 
     public event Action OnPlayerChanged;
-    public void PlayerChaged()
+    public void PlayerChanged()
     {
         if(OnPlayerChanged != null)
         {

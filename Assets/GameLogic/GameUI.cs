@@ -8,119 +8,137 @@ namespace Assets.GameLogic
 {
     class GameUI : MonoBehaviour
     {
-        private bool buttonSwitched;
-        private const int PORTALPROFIT = 50;
-        private static int leftPlayerEnergy;
-        private static int rightPlayerEnergy;
-        [SerializeField] private TextMeshProUGUI leftEnergyT;
-        [SerializeField] private TextMeshProUGUI rightEnergyT;
-        [SerializeField] private TextMeshProUGUI mainButtonT;
-        [SerializeField] private SpawnMenu spawnMenu;
+        private PlayerControler playerControler;
+        private UnitSelection unitSelection;
+        private CellManager cellManager;
+        [SerializeField] private GameObject instruction;
+
+        [SerializeField] private Sprite lightBTSprite;
+        [SerializeField] private Sprite darkBTSprite;
+        [SerializeField] private Sprite darkInfoBTSprite;
+        [SerializeField] private Sprite lightInfoBTSprite;
+
+        [SerializeField] private GameObject userControls;
+        [SerializeField] private TextMeshProUGUI LightEnergyLableT;
+        [SerializeField] private TextMeshProUGUI LightEnergyValueT;
+        [SerializeField] private TextMeshProUGUI DarkEnergyLableT;
+        [SerializeField] private TextMeshProUGUI DarkEnergyValueT;
+        [SerializeField] private Button infoBT;
+        [SerializeField] private Button[] actionBT;
+
+        [SerializeField] private GameObject playerChangingScreen;
+        [SerializeField] private GameObject lightsTurnLable;
+        [SerializeField] private GameObject darksTurnLable;
+
         [SerializeField] private GameObject winScreen;
         [SerializeField] private TextMeshProUGUI winBoxT;
 
+        private void Awake()
+        {
+            playerControler = PlayerControler.GetInstance();
+            unitSelection = UnitSelection.GetInstance();
+            cellManager = CellManager.GetInstance();
+        }
+
         private void Start()
         {
+            playerControler = PlayerControler.GetInstance();
             GameEvents.GetInstance().OnWin += ShowWinScreen;
-            leftPlayerEnergy = 100;
-            rightPlayerEnergy = 100;
-            leftEnergyT.text = leftPlayerEnergy.ToString();
-            rightEnergyT.text = rightPlayerEnergy.ToString();
+            ShowChangingScreen();
+            instruction.SetActive(true);
         }
 
-        public void MainButtonPressed()
+        private void ShowChangingScreen()
         {
-            if(buttonSwitched)
+            userControls.SetActive(false);
+            if (playerControler.FirstPlayerTurn())
             {
-                GameEvents.GetInstance().CaptureButtonPressed();
+                lightsTurnLable.SetActive(true);
+                darksTurnLable.SetActive(false);
             }
             else
             {
-                GameEvents.GetInstance().PlayerChaged();
-                if (TurnCounter.GetInstance().GetTurnsCount() > 0)
+                lightsTurnLable.SetActive(false);
+                darksTurnLable.SetActive(true);
+            }
+            playerChangingScreen.SetActive(true);
+        }
+
+        public void ResumeGame()
+        {
+            if (playerControler.FirstPlayerTurn())
+            {
+                DarkEnergyLableT.gameObject.SetActive(false);
+                DarkEnergyValueT.gameObject.SetActive(false);
+                LightEnergyLableT.gameObject.SetActive(true);
+                LightEnergyValueT.gameObject.SetActive(true);
+
+                infoBT.image.sprite = lightInfoBTSprite;
+
+                foreach(Button button in actionBT)
                 {
-                    AddEnergy();
+                    button.image.sprite = lightBTSprite;
                 }
             }
-        }
-
-        public void AddEnergy()
-        {
-            if (TurnCounter.GetInstance().FirstPlayerTurn())
-            {
-                leftPlayerEnergy += CellManager.GetInstance().LeftPortalCount() * PORTALPROFIT;
-            }
             else
             {
-                rightPlayerEnergy += CellManager.GetInstance().RightPortalCount() * PORTALPROFIT;
-            }
-            UpdateEnergyT();
+                DarkEnergyLableT.gameObject.SetActive(true);
+                DarkEnergyValueT.gameObject.SetActive(true);
+                LightEnergyLableT.gameObject.SetActive(false);
+                LightEnergyValueT.gameObject.SetActive(false);
+
+                infoBT.image.sprite = darkInfoBTSprite;
+
+                foreach (Button button in actionBT)
+                {
+                    button.image.sprite = darkBTSprite;
+                }
+            } 
+            UpdateEnergyValue();
+            userControls.SetActive(true); 
+            playerChangingScreen.SetActive(false); 
         }
 
-        public void UpdateEnergyT()
+        public void PassMove()
         {
-            leftEnergyT.text = leftPlayerEnergy.ToString();
-            rightEnergyT.text = rightPlayerEnergy.ToString();
+            GameEvents.GetInstance().PlayerChanged();
+            ShowChangingScreen();
         }
 
-        public int GetCurrentPlayerEnergy()
+        public void UseHealing()
         {
-            if (TurnCounter.GetInstance().FirstPlayerTurn())
-            {
-                return leftPlayerEnergy;
-            }
+            actionBT[1].interactable = false;
+            unitSelection.GetSelectedUnit().Heal();
+        }
+
+        public void UpdateEnergyValue()
+        {
+            if (playerControler.FirstPlayerTurn())
+                LightEnergyValueT.text = playerControler.GetEnergy().ToString();
             else
-            {
-                return rightPlayerEnergy;
-            }
+                DarkEnergyValueT.text = playerControler.GetEnergy().ToString();
         }
 
-        public void SpendEnergy(int amount)
+        public void Capture()
         {
-            if (TurnCounter.GetInstance().FirstPlayerTurn())
-            {
-                leftPlayerEnergy -= amount;
-            }
-            else
-            {
-                rightPlayerEnergy -= amount;
-            }
-            UpdateEnergyT();
-        }
-
-        public bool IsButtonSwiched()
-        {
-            return buttonSwitched;
-        }
-
-        public void SwitchMainButton()
-        {
-            if(buttonSwitched)
-            {
-                mainButtonT.SetText("Finish turn");
-                buttonSwitched = false;
-            }
-            else
-            {
-                mainButtonT.SetText("Capture the portal");
-                buttonSwitched = true;
-            }
-        }
-
-        public void ShowInfoScreen()
-        {
-            spawnMenu.OpenOnlyInfo();
+            actionBT[3].interactable = false;
+            cellManager.CapturePortal(unitSelection.GetSelectedUnit().transform.position);
         }
 
         private void ShowWinScreen()
         {
-            winBoxT.text = TurnCounter.GetInstance().GetCurrentPlayer().ToString() + " player win!";
+            winBoxT.text = PlayerControler.GetInstance().GetCurrentPlayer().ToString() + " player win!";
             winScreen.SetActive(true);
         }
 
         public void ExitToMainMenu()
         {
             SceneManager.LoadScene(0);
+        }
+
+        public void OpenInstruction()
+        {
+            instruction.SetActive(true);
         }
     }
 }

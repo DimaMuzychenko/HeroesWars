@@ -63,7 +63,7 @@ namespace Assets.GameLogic.CellClasses
 
             Cell newPortal;
 
-            if (TurnCounter.GetInstance().FirstPlayerTurn())
+            if (PlayerControler.GetInstance().FirstPlayerTurn())
             {                
                 newPortal = Instantiate(leftPortalPrefab, gameObject.transform);
             }

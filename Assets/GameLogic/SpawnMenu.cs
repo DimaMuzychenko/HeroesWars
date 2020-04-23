@@ -9,7 +9,6 @@ public class SpawnMenu : MonoBehaviour
     public static bool isActive = false;
     public ToggleGroup toggles;    
     [SerializeField] private UnitControler unitControler;
-    [SerializeField] private GameUI gameUI;
     [SerializeField] private PrefabsList prefabsList;
     [SerializeField] private Button summonBT;
     private Unit[] units;
@@ -69,7 +68,7 @@ public class SpawnMenu : MonoBehaviour
     public void SpawnUnit()
     {
         unitControler.SpawnUnit(selectedUnit.GetUnitInfo()[1].ToString());
-        gameUI.SpendEnergy(selectedUnit.GetPrice());
+        PlayerControler.GetInstance().SpendEnergy(selectedUnit.GetPrice());
         Close();
     }
 
@@ -86,7 +85,7 @@ public class SpawnMenu : MonoBehaviour
         priceInfoT.text = (string)info[6];
         descriptionT.text = (string)info[7];
 
-        if (selectedUnit.GetPrice() > gameUI.GetCurrentPlayerEnergy())
+        if (selectedUnit.GetPrice() > PlayerControler.GetInstance().GetEnergy())
         {
             summonBT.interactable = false;
             summonBT.GetComponentInChildren<TextMeshProUGUI>().color = new Color(200/256f, 200 / 256f, 200 / 256f, 0.5f);
@@ -116,7 +115,7 @@ public class SpawnMenu : MonoBehaviour
 
     private void UpdateTeamOfUnits()
     {
-        if(TurnCounter.GetInstance().FirstPlayerTurn())
+        if(PlayerControler.GetInstance().FirstPlayerTurn())
         {
             units = prefabsList.GetAllLeftUnits();
         }

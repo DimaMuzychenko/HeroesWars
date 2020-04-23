@@ -7,16 +7,17 @@ namespace Assets.GameLogic
     class GameControler : MonoBehaviour
     {
         [SerializeField] SpawnMenu spawnMenu;
-        [SerializeField] UnitControler unitControler;
-        [SerializeField] ActionDefiner actionDefiner;        
-        [SerializeField] UnitSelection unitSelection;
-        [SerializeField] UnitsList unitsList;
+        [SerializeField] ActionDefiner actionDefiner;
         [SerializeField] CellManager cellManager;
+        UnitSelection unitSelection;
         CellSelection cellSelection;
+        UnitsList unitsList;
 
         private void Awake()
         {
             cellSelection = CellSelection.GetInstance();
+            unitsList = UnitsList.GetInstance();
+            unitSelection = UnitSelection.GetInstance();
         }
         private void Start()
         {
@@ -27,60 +28,79 @@ namespace Assets.GameLogic
 
         private void DoAction(Vector3 targetPosition)
         {
-            Debug.Log(actionDefiner.DefineAction(targetPosition));
-            switch (actionDefiner.DefineAction(targetPosition))
+            if(cellManager.GetCell(targetPosition) != null)
             {
-                case ActionDefiner.Action.SelectCell:
-                    cellSelection.SelectCell(cellManager.GetCell(targetPosition));
-                    unitSelection.DeselectUnit();
-                    break;
+                Debug.Log(actionDefiner.DefineAction(targetPosition));
+                switch (actionDefiner.DefineAction(targetPosition))
+                {
+                    case ActionDefiner.Action.SelectCell:
+                        cellSelection.SelectCell(cellManager.GetCell(targetPosition));
+                        unitSelection.DeselectUnit();
+                        break;
 
-                case ActionDefiner.Action.SelectFriend:
-                    cellSelection.SelectCell(cellManager.GetCell(targetPosition));
-                    unitSelection.SelectUnit(unitsList.GetUnit(targetPosition));
-                    if(unitSelection.GetSelectedUnit().IsActive())
-                    {
-                        actionDefiner.ShowActions();
-                    }
-                    break;
+                    case ActionDefiner.Action.SelectFriend:
+                        cellSelection.SelectCell(cellManager.GetCell(targetPosition));
+                        unitSelection.SelectUnit(unitsList.GetUnit(targetPosition));
+                        unitSelection.GetSelectedUnit().ShowActions();
+                        break;
 
-                case ActionDefiner.Action.SelectEnemy:
-                    cellSelection.SelectCell(cellManager.GetCell(targetPosition));
-                    unitSelection.SelectUnit(unitsList.GetUnit(targetPosition));
-                    break;
+                    case ActionDefiner.Action.SelectEnemy:
+                        cellSelection.SelectCell(cellManager.GetCell(targetPosition));
+                        unitSelection.SelectUnit(unitsList.GetUnit(targetPosition));
+                        break;
 
-                case ActionDefiner.Action.Attack:
-                    actionDefiner.HideActions();
-                    unitControler.Attack(targetPosition);
-                    break;
+                    case ActionDefiner.Action.Attack:
+                        unitSelection.GetSelectedUnit().HideActions();
+                        unitSelection.GetSelectedUnit().Attack(targetPosition);
+                        break;
 
-                case ActionDefiner.Action.ShowActions:
-                    actionDefiner.ShowActions();
-                    break;
+                    case ActionDefiner.Action.ShowActions:
+                        cellSelection.SelectCell(cellManager.GetCell(targetPosition));
+                        unitSelection.GetSelectedUnit().ShowActions();
+                        break;
 
-                case ActionDefiner.Action.Spawn:
-                    cellSelection.SelectCell(cellManager.GetCell(targetPosition));
-                    spawnMenu.Open();
-                    break;
+                    case ActionDefiner.Action.Spawn:
+                        cellSelection.SelectCell(cellManager.GetCell(targetPosition));
+                        spawnMenu.Open();
+                        break;
 
-                case ActionDefiner.Action.Cancel:
-                    actionDefiner.HideActions();
-                    break;
+                    case ActionDefiner.Action.Cancel:
+                        unitSelection.GetSelectedUnit().HideActions();
+                        break;
 
-                case ActionDefiner.Action.Move:
-                    unitControler.Move(cellSelection.GetSelectedCell(), cellManager.GetCell(targetPosition));
-                    cellSelection.SelectCell(cellManager.GetCell(targetPosition));
-                    actionDefiner.ShowActions();
-                    break;
+                    case ActionDefiner.Action.Move:
+                        cellSelection.SelectCell(cellManager.GetCell(targetPosition));
+                        unitSelection.GetSelectedUnit().MoveTo(targetPosition);
+                        break;
 
-                case ActionDefiner.Action.Ignore:
-                    break;
+                    case ActionDefiner.Action.Ignore:
+                        break;
+                }
+            }
+        }
+
+        public void HideActions()
+        {
+            foreach (Cell cell in cellManager.GetAllCells())
+            {
+                if (cell != null)
+                {
+                    cell.GetComponent<Renderer>().material.color = Color.white;
+                }
+            }
+            if (unitsList.GetAllEnemies().Length > 0)
+            {
+                foreach (Unit unit in unitsList.GetAllEnemies())
+                {
+                    unit.outline.RemoveOutline();
+                    unit.HideDamage();
+                }
             }
         }
 
         private void RefreshField()
         {
-            actionDefiner.HideActions();
+            HideActions();
             cellSelection.HideSelection();
             unitSelection.DeselectUnit();
             unitsList.MakeActiveUnits();
@@ -91,7 +111,7 @@ namespace Assets.GameLogic
             cellManager.CapturePortal(unitSelection.GetSelectedUnit().transform.position);
             cellSelection.SelectCell(cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position));
             unitSelection.GetSelectedUnit().Disactivate();
-            actionDefiner.HideActions();
+            unitSelection.GetSelectedUnit().HideActions();
             if(WinCheck())
             {
                 GameEvents.GetInstance().ShowWinScreen();

@@ -4,36 +4,46 @@ using System.Collections.Generic;
 
 namespace Assets.GameLogic
 {
-    public class UnitsList : MonoBehaviour
+    public class UnitsList
     {
-        List<Unit> leftUnits;
-        List<Unit> rightUnits;
+        private List<Unit> lightUnits;
+        private List<Unit> darkUnits;
+        private static UnitsList instance;
 
-        private void Awake()
+        public UnitsList()
         {
-            leftUnits = new List<Unit>();
-            rightUnits = new List<Unit>();
+            lightUnits = new List<Unit>();
+            darkUnits = new List<Unit>();
+        }
+
+
+        public static UnitsList GetInstance()
+        {
+            if(instance == null)
+            {
+                instance = new UnitsList();
+            }
+            return instance;
         }
 
         public void AddToRight(Unit unit)
         {
-            unit.gameObject.GetComponent<SpriteRenderer>().flipX = true;
-            rightUnits.Add(unit);
+            darkUnits.Add(unit);
         }
 
         public void AddToLeft(Unit unit)
         {
-            leftUnits.Add(unit);
+            lightUnits.Add(unit);
         }
 
 
         public bool ContainsInLeft(Cell cell)
         {
-            for (int i = 0; i < leftUnits.Count; i++)
+            for (int i = 0; i < lightUnits.Count; i++)
             {
-                if (leftUnits[i] != null)
+                if (lightUnits[i] != null)
                 {
-                    if (leftUnits[i].transform.position == cell.transform.position)
+                    if (lightUnits[i].transform.position == cell.transform.position)
                         return true;
                 }
             }
@@ -42,11 +52,11 @@ namespace Assets.GameLogic
 
         public bool ContainsInLeft(Vector3 position)
         {
-            for (int i = 0; i < leftUnits.Count; i++)
+            for (int i = 0; i < lightUnits.Count; i++)
             {
-                if (leftUnits[i] != null)
+                if (lightUnits[i] != null)
                 {
-                    if (leftUnits[i].transform.position == position)
+                    if (lightUnits[i].transform.position == position)
                         return true;
                 }
             }
@@ -55,11 +65,11 @@ namespace Assets.GameLogic
 
         public bool ContainsInRight(Cell cell)
         {
-            for (int i = 0; i < rightUnits.Count; i++)
+            for (int i = 0; i < darkUnits.Count; i++)
             {
-                if (rightUnits[i] != null)
+                if (darkUnits[i] != null)
                 {
-                    if (rightUnits[i].transform.position == cell.transform.position)
+                    if (darkUnits[i].transform.position == cell.transform.position)
                         return true;
                 }
             }
@@ -68,11 +78,11 @@ namespace Assets.GameLogic
 
         public bool ContainsInRight(Vector3 position)
         {
-            for (int i = 0; i < rightUnits.Count; i++)
+            for (int i = 0; i < darkUnits.Count; i++)
             {
-                if (rightUnits[i] != null)
+                if (darkUnits[i] != null)
                 {
-                    if (rightUnits[i].transform.position == position)
+                    if (darkUnits[i].transform.position == position)
                         return true;
                 }
             }
@@ -92,23 +102,23 @@ namespace Assets.GameLogic
 
         public Unit GetUnit(Cell cell)
         {
-            for (int i = 0; i < leftUnits.Count; i++)
+            for (int i = 0; i < lightUnits.Count; i++)
             {
-                if (leftUnits[i] != null)
+                if (lightUnits[i] != null)
                 {
-                    if (leftUnits[i].transform.position == cell.transform.position)
+                    if (lightUnits[i].transform.position == cell.transform.position)
                     {
-                        return leftUnits[i];
+                        return lightUnits[i];
                     }
                 }
             }
-            for (int i = 0; i < rightUnits.Count; i++)
+            for (int i = 0; i < darkUnits.Count; i++)
             {
-                if (rightUnits[i] != null)
+                if (darkUnits[i] != null)
                 {
-                    if (rightUnits[i].transform.position == cell.transform.position)
+                    if (darkUnits[i].transform.position == cell.transform.position)
                     {
-                        return rightUnits[i];
+                        return darkUnits[i];
                     }
                 }
             }
@@ -116,23 +126,23 @@ namespace Assets.GameLogic
         }
         public Unit GetUnit(Vector3 position)
         {
-            for (int i = 0; i < leftUnits.Count; i++)
+            for (int i = 0; i < lightUnits.Count; i++)
             {
-                if (leftUnits[i] != null)
+                if (lightUnits[i] != null)
                 {
-                    if (leftUnits[i].transform.position == position)
+                    if (lightUnits[i].transform.position == position)
                     {
-                        return leftUnits[i];
+                        return lightUnits[i];
                     }
                 }
             }
-            for (int i = 0; i < rightUnits.Count; i++)
+            for (int i = 0; i < darkUnits.Count; i++)
             {
-                if (rightUnits[i] != null)
+                if (darkUnits[i] != null)
                 {
-                    if (rightUnits[i].transform.position == position)
+                    if (darkUnits[i].transform.position == position)
                     {
-                        return rightUnits[i];
+                        return darkUnits[i];
                     }
                 }
             }
@@ -141,9 +151,9 @@ namespace Assets.GameLogic
         
         public void MakeActiveUnits()
         {
-            if(TurnCounter.GetInstance().GetCurrentPlayer() == TurnCounter.Player.Left)
+            if(PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Left)
             {
-                foreach (Unit unit in leftUnits)
+                foreach (Unit unit in lightUnits)
                 {
                     if (unit != null)
                     {
@@ -152,7 +162,7 @@ namespace Assets.GameLogic
                         unit.MakeFriendlyStatHUD();
                     }
                 }
-                foreach(Unit unit in rightUnits)
+                foreach(Unit unit in darkUnits)
                 {
                     if (unit != null)
                     {
@@ -161,9 +171,9 @@ namespace Assets.GameLogic
                 }
             }
 
-            if (TurnCounter.GetInstance().GetCurrentPlayer() == TurnCounter.Player.Right)
+            if (PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Right)
             {
-                foreach (Unit unit in rightUnits)
+                foreach (Unit unit in darkUnits)
                 {
                     if (unit != null)
                     {
@@ -172,7 +182,7 @@ namespace Assets.GameLogic
                         unit.MakeFriendlyStatHUD();
                     }
                 }
-                foreach (Unit unit in leftUnits)
+                foreach (Unit unit in lightUnits)
                 {
                     if (unit != null)
                     {
@@ -184,29 +194,29 @@ namespace Assets.GameLogic
 
         public Unit[] GetAllEnemies()
         {
-            if(TurnCounter.GetInstance().GetCurrentPlayer() == TurnCounter.Player.Left)
+            if(PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Left)
             {
-                rightUnits.RemoveAll(unit => unit == null);
-                return rightUnits.ToArray();
+                darkUnits.RemoveAll(unit => unit == null);
+                return darkUnits.ToArray();
             }
             else
             {
-                leftUnits.RemoveAll(unit => unit == null);
-                return leftUnits.ToArray();
+                lightUnits.RemoveAll(unit => unit == null);
+                return lightUnits.ToArray();
             }
         }
 
         public Unit[] GetAllFriends()
         {
-            if (TurnCounter.GetInstance().GetCurrentPlayer() == TurnCounter.Player.Left)
+            if (PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Left)
             {
-                leftUnits.RemoveAll(unit => unit == null);
-                return leftUnits.ToArray();
+                lightUnits.RemoveAll(unit => unit == null);
+                return lightUnits.ToArray();
             }
             else
             {                
-                rightUnits.RemoveAll(unit => unit == null);
-                return rightUnits.ToArray();
+                darkUnits.RemoveAll(unit => unit == null);
+                return darkUnits.ToArray();
             }
         }
     }

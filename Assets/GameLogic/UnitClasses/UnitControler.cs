@@ -6,14 +6,16 @@ namespace Assets.GameLogic
 {
     public class UnitControler : MonoBehaviour
     {
-        [SerializeField] UnitsList units;
         [SerializeField] UnitFactory unitFactory;
-        [SerializeField] UnitSelection unitSelection;
+        UnitSelection unitSelection;
         CellSelection cellSelction;
+        UnitsList units;
 
         private void Awake()
         {
             cellSelction = CellSelection.GetInstance();
+            units = UnitsList.GetInstance();
+            unitSelection = UnitSelection.GetInstance();
         }
 
         public void SpawnUnit(string name)

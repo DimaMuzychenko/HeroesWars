@@ -2,14 +2,24 @@
 
 namespace Assets.GameLogic
 {
-    class UnitSelection : MonoBehaviour
+    class UnitSelection
     {
-        Unit unit;
-        bool isUnitSelected;
+        private Unit unit;
+        private bool isUnitSelected;
+        private static UnitSelection instance;
 
-        private void Awake()
+        public UnitSelection()
         {
             isUnitSelected = false;
+        }
+
+        public static UnitSelection GetInstance()
+        {
+            if(instance == null)
+            {
+                instance = new UnitSelection();
+            }
+            return instance;
         }
 
         public void SelectUnit(Unit unit)
