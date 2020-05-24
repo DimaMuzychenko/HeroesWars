@@ -32,6 +32,11 @@ namespace Assets.GameLogic
 
         [SerializeField] private GameObject winScreen;
         [SerializeField] private TextMeshProUGUI winBoxT;
+        [SerializeField] private GameObject lightLableT;
+        [SerializeField] private GameObject darkLableT;
+        [SerializeField] private GameObject lightButtonT;
+        [SerializeField] private GameObject darkButtonT;
+
 
         private void Awake()
         {
@@ -44,6 +49,7 @@ namespace Assets.GameLogic
         {
             playerControler = PlayerControler.GetInstance();
             GameEvents.GetInstance().OnWin += ShowWinScreen;
+            GameEvents.GetInstance().OnPlayerChanged += RefreshButtons;
             ShowChangingScreen();
             instruction.SetActive(true);
         }
@@ -107,6 +113,8 @@ namespace Assets.GameLogic
 
         public void UseHealing()
         {
+            // TODO: switch healing interactable for each unit
+            // and channel alpha of image of button
             actionBT[1].interactable = false;
             unitSelection.GetSelectedUnit().Heal();
         }
@@ -121,13 +129,30 @@ namespace Assets.GameLogic
 
         public void Capture()
         {
-            actionBT[3].interactable = false;
+            // TODO: switch capture interactable for each unit
+            // and channel alpha of image of button
+            actionBT[2].interactable = false;
             cellManager.CapturePortal(unitSelection.GetSelectedUnit().transform.position);
         }
 
         private void ShowWinScreen()
         {
-            winBoxT.text = PlayerControler.GetInstance().GetCurrentPlayer().ToString() + " player win!";
+            // finish with winScreen
+            if(PlayerControler.GetInstance().FirstPlayerTurn())
+            {
+                lightLableT.SetActive(true);
+                lightButtonT.SetActive(true);
+                darkLableT.SetActive(false);
+                darkButtonT.SetActive(false);
+            }
+            else
+            {
+                lightLableT.SetActive(false);
+                lightButtonT.SetActive(false);
+                darkLableT.SetActive(true);
+                darkButtonT.SetActive(true);
+            }
+            winBoxT.text = PlayerControler.GetInstance().GetCurrentPlayer().ToString() + "'s win!";
             winScreen.SetActive(true);
         }
 
@@ -139,6 +164,14 @@ namespace Assets.GameLogic
         public void OpenInstruction()
         {
             instruction.SetActive(true);
+        }
+
+        public void RefreshButtons()
+        {
+            for(int i = 1; i < actionBT.Length; i++)
+            {
+                actionBT[i].interactable = true;
+            }
         }
     }
 }

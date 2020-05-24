@@ -6,7 +6,8 @@ namespace Assets.GameLogic
 {
     class ActionDefiner : MonoBehaviour
     {
-        private UnitSelection unitSelection;        
+        private UnitSelection unitSelection;
+        private PathFinder pathFinder;
         [SerializeField] private CellManager cellManager;
         private UnitsList unitsList;
         public enum Action
@@ -18,10 +19,11 @@ namespace Assets.GameLogic
             FriendUnit, EnemyUnit, Cell, FriendPortal, EnemyPortal
         }
 
-        private void Awake()
+        private void Start()
         {
             unitsList = UnitsList.GetInstance();
             unitSelection = UnitSelection.GetInstance();
+            pathFinder = PathFinder.GetInstance();
         }
 
         public Action DefineAction(Vector3 targetPosition)
@@ -55,27 +57,27 @@ namespace Assets.GameLogic
 
             if (unitsList.ContainsInLeft(targetPosition))
             {
-                if (currentPlayer == PlayerControler.Player.Left) return Target.FriendUnit;
+                if (currentPlayer == PlayerControler.Player.Light) return Target.FriendUnit;
 
-                if (currentPlayer == PlayerControler.Player.Right) return Target.EnemyUnit;
+                if (currentPlayer == PlayerControler.Player.Dark) return Target.EnemyUnit;
             }
             else if (unitsList.ContainsInRight(targetPosition))
             {
-                if (currentPlayer == PlayerControler.Player.Left) return Target.EnemyUnit;
+                if (currentPlayer == PlayerControler.Player.Light) return Target.EnemyUnit;
 
-                if (currentPlayer == PlayerControler.Player.Right) return Target.FriendUnit;
+                if (currentPlayer == PlayerControler.Player.Dark) return Target.FriendUnit;
             }
             else if (cellManager.GetCell(targetPosition).type == Cell.CellType.LightPortal)
             {
-                if (currentPlayer == PlayerControler.Player.Left) return Target.FriendPortal;
+                if (currentPlayer == PlayerControler.Player.Light) return Target.FriendPortal;
 
-                if (currentPlayer == PlayerControler.Player.Right) return Target.EnemyPortal;
+                if (currentPlayer == PlayerControler.Player.Dark) return Target.EnemyPortal;
             }
             else if (cellManager.GetCell(targetPosition).type == Cell.CellType.DarkPortal)
             {
-                if (currentPlayer == PlayerControler.Player.Left) return Target.EnemyPortal;
+                if (currentPlayer == PlayerControler.Player.Light) return Target.EnemyPortal;
 
-                if (currentPlayer == PlayerControler.Player.Right) return Target.FriendPortal;
+                if (currentPlayer == PlayerControler.Player.Dark) return Target.FriendPortal;
             }
             return Target.Cell;            
         }
@@ -90,7 +92,7 @@ namespace Assets.GameLogic
             {
                 if (unitSelection.GetSelectedUnit().state == Unit.UnitState.Waiting)
                 {
-                    if(unitSelection.GetSelectedUnit().CanRich(targetPosition))
+                    if(pathFinder.CanRich(targetPosition))
                     {
                         return Action.Move;
                     }
@@ -114,27 +116,20 @@ namespace Assets.GameLogic
             }
             else
             {
-                if (unitSelection.GetSelectedUnit().state == Unit.UnitState.Waiting)
+                if (unitSelection.GetSelectedUnit().transform.position == targetPosition)
                 {
-                    if(unitSelection.GetSelectedUnit().transform.position == targetPosition)
+                    if(unitSelection.GetSelectedUnit().state == Unit.UnitState.Waiting)
                     {
                         return Action.Cancel;
                     }
                     else
                     {
-                        return Action.SelectFriend;
+                        return Action.ShowActions;
                     }
                 }
                 else
                 {
-                    if(unitSelection.GetSelectedUnit().transform.position == targetPosition)
-                    {
-                        return Action.ShowActions;
-                    }
-                    else
-                    {
-                        return Action.SelectFriend;
-                    }
+                    return Action.SelectFriend;
                 }
             }
         }
@@ -149,7 +144,7 @@ namespace Assets.GameLogic
             {
                 if (unitSelection.GetSelectedUnit().state == Unit.UnitState.Waiting)
                 {
-                    if (unitSelection.GetSelectedUnit().CanAttack(targetPosition))
+                    if (pathFinder.CanAttack(targetPosition))
                     {
                         return Action.Attack;
                     }
@@ -175,7 +170,7 @@ namespace Assets.GameLogic
             {
                 if (unitSelection.GetSelectedUnit().state == Unit.UnitState.Waiting)
                 {
-                    if (unitSelection.GetSelectedUnit().CanRich(targetPosition) && !unitSelection.GetSelectedUnit().WasMoved())
+                    if (pathFinder.CanRich(targetPosition))
                     {
                         return Action.Move;
                     }
@@ -202,7 +197,7 @@ namespace Assets.GameLogic
             {
                 if (unitSelection.GetSelectedUnit().state == Unit.UnitState.Waiting)
                 {
-                    if (unitSelection.GetSelectedUnit().CanRich(targetPosition))
+                    if (pathFinder.CanRich(targetPosition))
                     {
                         return Action.Move;
                     }
@@ -227,24 +222,24 @@ namespace Assets.GameLogic
         //    else
         //        return false;
         //}
-        public void HideActions()
-        {
-            foreach (Cell cell in cellManager.GetAllCells())
-            {
-                if (cell != null)
-                {
-                    cell.GetComponent<Renderer>().material.color = Color.white;
-                }
-            }
-            if (unitsList.GetAllEnemies().Length > 0)
-            {
-                foreach (Unit unit in unitsList.GetAllEnemies())
-                {
-                    unit.outline.RemoveOutline();
-                    unit.HideDamage();
-                }
-            }
-        }
+        //public void HideActions()
+        //{
+        //    foreach (Cell cell in cellManager.GetAllCells())
+        //    {
+        //        if (cell != null)
+        //        {
+        //            cell.GetComponent<Renderer>().material.color = Color.white;
+        //        }
+        //    }
+        //    if (unitsList.GetAllEnemies().Length > 0)
+        //    {
+        //        foreach (Unit unit in unitsList.GetAllEnemies())
+        //        {
+        //            unit.outline.RemoveOutline();
+        //            unit.HideDamage();
+        //        }
+        //    }
+        //}
 
         //public void ShowActions()
         //{

@@ -12,11 +12,11 @@ namespace Assets.GameLogic
             Unit instance;
             if (PlayerControler.GetInstance().FirstPlayerTurn())
             {
-                instance = Instantiate(prefabsList.GetLeftUnit(name));
+                instance = Instantiate(prefabsList.GetLeftUnit(name), position, Quaternion.identity, CellClasses.CellManager.GetInstance().transform);
             }
             else
             {
-                instance = Instantiate(prefabsList.GetRightUnit(name));
+                instance = Instantiate(prefabsList.GetRightUnit(name), position, Quaternion.identity, CellClasses.CellManager.GetInstance().transform);
             }
             instance.transform.position = position;
             return instance;

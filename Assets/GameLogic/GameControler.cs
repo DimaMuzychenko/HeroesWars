@@ -100,10 +100,10 @@ namespace Assets.GameLogic
 
         private void RefreshField()
         {
-            HideActions();
             cellSelection.HideSelection();
             unitSelection.DeselectUnit();
             unitsList.MakeActiveUnits();
+            unitsList.HideDamage();
         }
 
         private void CapturePortal()
@@ -120,7 +120,7 @@ namespace Assets.GameLogic
 
         private bool WinCheck()
         {
-            if(cellManager.LeftPortalCount() == 0 || cellManager.RightPortalCount() == 0)
+            if(cellManager.LightPortalCount() == 0 || cellManager.DarkPortalCount() == 0)
             {
                 return true;
             }

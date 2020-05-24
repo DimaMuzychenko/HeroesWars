@@ -7,10 +7,13 @@ using TMPro;
 public class SpawnMenu : MonoBehaviour
 {
     public static bool isActive = false;
-    public ToggleGroup toggles;    
-    [SerializeField] private UnitControler unitControler;
+    public ToggleGroup toggles;
+    [SerializeField] private UnitFactory unitFactory;
     [SerializeField] private PrefabsList prefabsList;
     [SerializeField] private Button summonBT;
+    private CellSelection cellSelection;
+    private UnitSelection unitSelection;
+    private UnitsList unitsList;
     private Unit[] units;
     private Unit selectedUnit;
     private Image[] images = new Image[6];
@@ -27,6 +30,10 @@ public class SpawnMenu : MonoBehaviour
 
     private void Awake()
     {
+        cellSelection = CellSelection.GetInstance();
+        unitsList = UnitsList.GetInstance();
+        unitSelection = UnitSelection.GetInstance();
+
         for(int i = 0; i < toggles.GetComponentsInChildren<Toggle>().Length; i++)
         {
             foreach (Image image in toggles.GetComponentsInChildren<Toggle>()[i].GetComponentsInChildren<Image>())
@@ -56,7 +63,6 @@ public class SpawnMenu : MonoBehaviour
         {
             if(toggles.GetComponentsInChildren<Toggle>()[i].isOn)
             {
-                Debug.Log(i);
                 selectedUnit = units[i];
                 break;
             }
@@ -67,7 +73,18 @@ public class SpawnMenu : MonoBehaviour
 
     public void SpawnUnit()
     {
-        unitControler.SpawnUnit(selectedUnit.GetUnitInfo()[1].ToString());
+        Vector3 position = cellSelection.GetSelectedCell().transform.position;
+        Unit newUnit = unitFactory.SpawnUnit(selectedUnit.GetUnitInfo()[1].ToString(), position);
+        if (PlayerControler.GetInstance().FirstPlayerTurn())
+        {
+            unitsList.AddToLeft(newUnit);
+        }
+        else
+        {
+            unitsList.AddToRight(newUnit);
+        }
+        unitSelection.SelectUnit(newUnit);
+
         PlayerControler.GetInstance().SpendEnergy(selectedUnit.GetPrice());
         Close();
     }
@@ -129,4 +146,5 @@ public class SpawnMenu : MonoBehaviour
             images[i].preserveAspect = true;
         }
     }
+
 }

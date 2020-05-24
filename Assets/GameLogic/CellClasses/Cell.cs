@@ -15,6 +15,7 @@ namespace Assets.GameLogic.CellClasses
         private void Awake()
         {
             spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+
         }
 
         public void OutlineCell(bool state)

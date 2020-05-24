@@ -1,8 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using Assets.GameLogic.CellClasses;
+using System;
 using System.Collections;
 using TMPro;
-using Assets.GameLogic.CellClasses;
+using UnityEngine;
 
 namespace Assets.GameLogic
 {
@@ -17,24 +17,26 @@ namespace Assets.GameLogic
         [SerializeField] private int maxHealth;
         [SerializeField] private int basicAttackPower;        
         [SerializeField] private int speed;
+        [SerializeField] private float movementSpeed;
         [SerializeField] private int range;
         [SerializeField] private int price;
         [SerializeField] private string description;
-        [SerializeField] private float movingSpeed;
+
+
+        [SerializeField] private Animator animator;
+
+        private PathFinder pathFinder;  
         private int attackPower;
         private int health;
         private bool isActive;
         private bool wasMoved;
-        private int healingCD;
-        private int abillityCD;
         private TextMeshProUGUI statHUD;
         private CellManager cellManager;
         private UnitsList unitsList;
-        [SerializeField] private GameUI ui;
         
         public enum UnitState
         {
-            IDLE, Moving, Attacking, Healing, Capturig, Waiting
+            IDLE, MovingRight, MovingLeft, AttackingLeft, AttackingRight, Healing, Capturig, Waiting
         }
 
         public enum Team
@@ -51,7 +53,8 @@ namespace Assets.GameLogic
         {
             cellManager = CellManager.GetInstance();
             unitsList = UnitsList.GetInstance();
-            statHUD = GetComponentInChildren<TextMeshProUGUI>();            
+            statHUD = GetComponentInChildren<TextMeshProUGUI>();
+            pathFinder = PathFinder.GetInstance();
             outline.RemoveOutline();
             attackPower = basicAttackPower;
             health = maxHealth;
@@ -59,11 +62,9 @@ namespace Assets.GameLogic
             MakeFriendlyStatHUD();
             isActive = false;
             state = UnitState.IDLE;
-            healingCD = 0;
-            abillityCD = 0;
         }
 
-        public Team GetUnitType()
+        public Team GetUnitTeam()
         {
             return team;
         }
@@ -88,12 +89,13 @@ namespace Assets.GameLogic
             if (!wasMoved && state == UnitState.IDLE|| state == UnitState.Waiting)
             {
                 //StartCoroutine(Healing());
+                state = UnitState.Healing;
+                animator.SetInteger("State", (int)state);
                 health += 10;
                 statHUD.text = health.ToString();
-                gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 0f, 1f);
             }
         }
-
+                
         private IEnumerator Healing()
         {
             Debug.Log("Healing was started");
@@ -111,13 +113,23 @@ namespace Assets.GameLogic
             state = UnitState.IDLE;
             Debug.Log("Healing ends");
         }
+
+        public void AnimationFinished()
+        {
+            state = UnitState.IDLE;
+            animator.SetInteger("State", (int)state);
+            Debug.Log("Animation was finished");
+        }
         
         public void MoveTo(Vector3 destination)
         {
-            if(!wasMoved && CanRich(destination))
+            if (isActive && !wasMoved && pathFinder.CanRich(destination))
             {
                 //move
-                StartCoroutine(Moving(destination));
+                var path = pathFinder.FindPath(destination);
+                //transform.position = path[path.Length - 1].transform.position;
+                //ShowActions();
+                StartCoroutine(Moving(path));                
             }
             else
             {
@@ -127,22 +139,37 @@ namespace Assets.GameLogic
             
         }
 
-        private IEnumerator Moving(Vector3 destination)
+        private IEnumerator Moving(Cell[] path)
         {
             Debug.Log("Moving was started");
             wasMoved = true;
-            state = UnitState.Moving;
-            float progress = 0;
-            float step = 0.01f;
-            while (Vector3.Distance(transform.position, destination) != 0.0f)
+            var startPosition = transform.position;
+            foreach (var point in path)
             {
-                transform.position = Vector3.Lerp(transform.position, destination, progress);
-                progress += step;
-                yield return null;
+                var destination = point.transform.position;                
+                var progress = 0f;
+                if(IsOnRightSide(destination))
+                {
+                    state = UnitState.MovingRight;
+                }
+                else
+                {
+                    state = UnitState.MovingLeft;
+                }
+                animator.SetInteger("State", (int)state);
+                while (transform.position != destination)
+                {
+                    progress += Time.fixedDeltaTime * movementSpeed;
+                    transform.position = Vector3.Lerp(startPosition, point.transform.position, progress);
+                    yield return null;
+                }
+                startPosition = destination;
             }
+            transform.position = new Vector3((float)Math.Round(transform.position.x, 2), (float)Math.Round(transform.position.y, 2), transform.position.z);  
             state = UnitState.IDLE;
-            Debug.Log("Moving was stopped");
+            animator.SetInteger("State", (int)state);
             ShowActions();
+            Debug.Log("Moving was stopped");
         }
 
         public int GetAttackPower()
@@ -157,10 +184,29 @@ namespace Assets.GameLogic
 
         public void Attack(Vector3 targetPosition)
         {
-            Debug.Log(GetAttackPower() + " points of damage were applied");
-            unitsList.GetUnit(targetPosition).ApplyDamage(GetAttackPower());
+            StartCoroutine(Attacking(targetPosition));
             Disactivate();
             outline.RemoveOutline();
+        }
+
+        private IEnumerator Attacking(Vector3 target)
+        {
+            Debug.Log("Attacking was started");
+            if(IsOnRightSide(target))
+            {
+                state = UnitState.AttackingRight;
+            }
+            else
+            {
+                state = UnitState.AttackingLeft;
+            }
+            animator.SetInteger("State", (int)state);
+            yield return new WaitForSeconds(0.15f);
+            Debug.Log(GetAttackPower() + " points of damage were applied");
+            unitsList.GetUnit(target).ApplyDamage(GetAttackPower());
+            yield return new WaitForSeconds(0.60f);
+            state = UnitState.IDLE;
+            Debug.Log("Attacking was stopped");
         }
 
         public void ApplyDamage(int damage)
@@ -180,25 +226,7 @@ namespace Assets.GameLogic
         {
             return range;
         }
-
-        public bool CanAttack(Vector3 targetPosition)
-        {
-            if (Math.Sqrt(Math.Pow(targetPosition.x - transform.position.x, 2) +
-                Math.Pow(targetPosition.y - transform.position.y, 2)) <= range)
-                return true;
-            else
-                return false;
-        }
-
-        public bool CanRich(Vector3 destination)
-        {
-            if (Math.Sqrt(Math.Pow(destination.x - transform.position.x, 2) +
-                Math.Pow(destination.y - transform.position.y, 2)) <= GetSpeed())
-                return true;
-            else
-                return false;
-        }
-
+        
         public bool IsActive()
         {
             return isActive;
@@ -206,7 +234,7 @@ namespace Assets.GameLogic
 
         public void Disactivate()
         {
-            outline.RemoveOutline(); 
+            outline.RemoveOutline();
             isActive = false;
             wasMoved = true;
         }
@@ -216,6 +244,18 @@ namespace Assets.GameLogic
             return wasMoved;
         }
 
+        private bool CloseEnemyExist()
+        {
+            if(unitsList.GetAllEnemies().Length > 0)
+            {
+                foreach(Unit enemy in unitsList.GetAllEnemies())
+                {
+                    if (pathFinder.CanAttack(enemy))
+                        return true;
+                }
+            }
+            return false;
+        }
 
         public void Activate()
         {
@@ -278,38 +318,46 @@ namespace Assets.GameLogic
             {
                 state = UnitState.Waiting;
 
-                foreach (Cell cell in cellManager.GetAllCells()) // highlight available cells
+                if(!wasMoved)
                 {
-                    if (cell != null)
+                    var availableCells = pathFinder.GetAvailableCells();
+                    Debug.Log("Available cells : " + availableCells.Count);
+                    foreach (Cell cell in cellManager.GetAllCells()) // highlight available cells
                     {
-                        if (!CanRich(cell) && !wasMoved)
+                        if (cell != null)
                         {
-                            cell.GetComponent<Renderer>().material.color = new Color(100 / 255f, 100 / 255f, 100 / 255f);
+                            if (!availableCells.Contains(cell))
+                            {
+                                cell.GetComponent<Renderer>().material.color = new Color(100 / 255f, 100 / 255f, 100 / 255f);
+                            }
                         }
+                    }
+                }
+                bool f = false;
+                foreach (Unit unit in unitsList.GetAllEnemies())
+                {
+                    //if (pathFinder.CanAttack(unit.transform.position))
+                    if (Vector3.Distance(unit.transform.position, transform.position) < GetRange() + 0.1f)
+                    {
+                        unit.outline.OutlineAsEnemy();
+                        unit.ShowDamage(attackPower);
+                        cellManager.GetCell(unit.transform.position).GetComponent<Renderer>().material.color = Color.white;
+                        f = true;
                     }
                 }
 
-                if (unitsList.GetAllEnemies().Length > 0) // outline enemies unit can attack
+                if (wasMoved && !f)
                 {
-                    foreach (Unit unit in unitsList.GetAllEnemies())
-                    {
-                        if (CanAttack(unit.transform.position))
-                        {
-                            unit.outline.OutlineAsEnemy();
-                            unit.ShowDamage(attackPower);
-                            cellManager.GetCell(unit.transform.position).GetComponent<Renderer>().material.color = Color.white;
-                        }
-                    }
+                    Disactivate();
                 }
             }
-        }
-        private bool CanRich(Cell cell)
+        }        
+
+        private bool IsOnRightSide(Vector3 target)
         {
-            if (Math.Sqrt(Math.Pow(cell.transform.position.x - transform.position.x, 2) +
-                Math.Pow(cell.transform.position.y - transform.position.y, 2)) <= GetSpeed())
+            if (target.x - transform.position.x > 0)
                 return true;
-            else
-                return false;
+            return false;
         }
 
         void ToDie()

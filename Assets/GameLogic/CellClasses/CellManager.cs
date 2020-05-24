@@ -41,7 +41,7 @@ namespace Assets.GameLogic.CellClasses
             return cells.ToArray();
         }
 
-        public int LeftPortalCount()
+        public int LightPortalCount()
         {
             int lPortalsCount = 0;
             foreach(Cell cell in cells)
@@ -53,7 +53,7 @@ namespace Assets.GameLogic.CellClasses
             }
             return lPortalsCount;
         }
-        public int RightPortalCount()
+        public int DarkPortalCount()
         {
             return cells.FindAll(cell => cell.type == Cell.CellType.DarkPortal).Count;
         }
@@ -62,18 +62,18 @@ namespace Assets.GameLogic.CellClasses
         {
 
             Cell newPortal;
+            Cell oldPortal = GetCell(portalPosition);
 
             if (PlayerControler.GetInstance().FirstPlayerTurn())
             {                
-                newPortal = Instantiate(leftPortalPrefab, gameObject.transform);
+                //newPortal = Instantiate(leftPortalPrefab, gameObject.transform);
+                newPortal = Instantiate(leftPortalPrefab, oldPortal.transform.position, GetCell(portalPosition).transform.rotation, gameObject.transform);
             }
             else
             {
-                newPortal = Instantiate(rightPortalPrefab, gameObject.transform);
-            }
-
-            newPortal.gameObject.transform.position = portalPosition;
-            Cell oldPortal = GetCell(portalPosition);
+                //newPortal = Instantiate(rightPortalPrefab, gameObject.transform);
+                newPortal = Instantiate(rightPortalPrefab, oldPortal.transform.position, GetCell(portalPosition).transform.rotation, gameObject.transform);
+            }          
             cells[cells.IndexOf(oldPortal)] = newPortal;
             Destroy(oldPortal.gameObject);
         }

@@ -19,7 +19,7 @@ namespace Assets.GameLogic
 
         public static UnitsList GetInstance()
         {
-            if(instance == null)
+            if (instance == null)
             {
                 instance = new UnitsList();
             }
@@ -92,11 +92,11 @@ namespace Assets.GameLogic
         public int PlayerOf(Vector3 positionOfUnit)
         {
             if (ContainsInLeft(positionOfUnit))
-                return 1;
-            else if (ContainsInRight(positionOfUnit))
-                return 2;
-            else
                 return 0;
+            else if (ContainsInRight(positionOfUnit))
+                return 1;
+            else
+                return -1;
         }
 
 
@@ -148,10 +148,10 @@ namespace Assets.GameLogic
             }
             return null;
         }
-        
+
         public void MakeActiveUnits()
         {
-            if(PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Left)
+            if (PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Light)
             {
                 foreach (Unit unit in lightUnits)
                 {
@@ -162,7 +162,7 @@ namespace Assets.GameLogic
                         unit.MakeFriendlyStatHUD();
                     }
                 }
-                foreach(Unit unit in darkUnits)
+                foreach (Unit unit in darkUnits)
                 {
                     if (unit != null)
                     {
@@ -171,7 +171,7 @@ namespace Assets.GameLogic
                 }
             }
 
-            if (PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Right)
+            if (PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Dark)
             {
                 foreach (Unit unit in darkUnits)
                 {
@@ -194,7 +194,7 @@ namespace Assets.GameLogic
 
         public Unit[] GetAllEnemies()
         {
-            if(PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Left)
+            if (PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Light)
             {
                 darkUnits.RemoveAll(unit => unit == null);
                 return darkUnits.ToArray();
@@ -208,15 +208,31 @@ namespace Assets.GameLogic
 
         public Unit[] GetAllFriends()
         {
-            if (PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Left)
+            if (PlayerControler.GetInstance().GetCurrentPlayer() == PlayerControler.Player.Light)
             {
                 lightUnits.RemoveAll(unit => unit == null);
                 return lightUnits.ToArray();
             }
             else
-            {                
+            {
                 darkUnits.RemoveAll(unit => unit == null);
                 return darkUnits.ToArray();
+            }
+        }
+
+        public Unit[] GetAllUnits()
+        {
+            var allUnits = new List<Unit>();
+            allUnits.AddRange(GetAllFriends());
+            allUnits.AddRange(GetAllEnemies());
+            return allUnits.ToArray();
+        }
+
+        public void HideDamage()
+        { 
+            foreach(Unit unit in GetAllUnits())
+            {
+                unit.HideDamage();
             }
         }
     }

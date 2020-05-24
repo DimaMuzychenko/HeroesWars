@@ -14,7 +14,7 @@ namespace Assets.GameLogic
 
         public enum Player
         {
-            Left, Right
+            Light, Dark
         }
 
         public PlayerControler()
@@ -45,9 +45,9 @@ namespace Assets.GameLogic
         public Player GetCurrentPlayer()
         {
             if (turnOfLight)
-                return Player.Left;
+                return Player.Light;
             else
-                return Player.Right;
+                return Player.Dark;
         }
         public bool FirstPlayerTurn()
         {
@@ -65,11 +65,11 @@ namespace Assets.GameLogic
             {
                 if (turnOfLight)
                 {
-                    lightsEnergy += CellManager.GetInstance().LeftPortalCount() * PORTALPROFIT;
+                    lightsEnergy += CellManager.GetInstance().LightPortalCount() * PORTALPROFIT;
                 }
                 else
                 {
-                    darksEnergy += CellManager.GetInstance().RightPortalCount() * PORTALPROFIT;
+                    darksEnergy += CellManager.GetInstance().DarkPortalCount() * PORTALPROFIT;
                 }
             }            
         }

@@ -30,6 +30,8 @@ namespace Assets.GameLogic
 
         public void DeselectUnit()
         {
+            if(unit != null)
+                unit.HideActions();
             this.unit = null;
             isUnitSelected = false;
         }

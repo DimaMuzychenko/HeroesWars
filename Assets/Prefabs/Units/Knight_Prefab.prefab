@@ -99,16 +99,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outline: {fileID: 114556420422073762}
   sprite: {fileID: 21300000, guid: aaddf170a97d9b9488cbc792537b56fd, type: 3}
+  state: 0
   team: 0
   type: 0
   unitName: Knight
   maxHealth: 150
   basicAttackPower: 30
-  speed: 2
+  speed: 5
+  movementSpeed: 0.5
   range: 1
   price: 100
   description: Cool boy!
-  movingSpeed: 0.05
 --- !u!114 &114556420422073762
 MonoBehaviour:
   m_ObjectHideFlags: 0
