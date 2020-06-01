@@ -48,4 +48,13 @@ public class GameEvents
             OnWin();
         }
     }
+
+    public event Action OnActionDone;
+    public void ActionDone()
+    {
+        if(OnActionDone != null)
+        {
+            OnActionDone();
+        }
+    }
 }

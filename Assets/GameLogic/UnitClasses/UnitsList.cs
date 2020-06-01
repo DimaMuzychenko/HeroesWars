@@ -158,7 +158,7 @@ namespace Assets.GameLogic
                     if (unit != null)
                     {
                         unit.Activate();
-                        unit.outline.OutlineAsFriend();
+                        unit.statHUD.HighlightAsFriend();
                         unit.MakeFriendlyStatHUD();
                     }
                 }
@@ -166,7 +166,7 @@ namespace Assets.GameLogic
                 {
                     if (unit != null)
                     {
-                        unit.MakeEnemyStatHUD();
+                        unit.MakeNeutralStatHUD();
                     }
                 }
             }
@@ -178,7 +178,7 @@ namespace Assets.GameLogic
                     if (unit != null)
                     {
                         unit.Activate();
-                        unit.outline.OutlineAsFriend();
+                        unit.statHUD.HighlightAsFriend();
                         unit.MakeFriendlyStatHUD();
                     }
                 }
@@ -186,7 +186,7 @@ namespace Assets.GameLogic
                 {
                     if (unit != null)
                     {
-                        unit.MakeEnemyStatHUD();
+                        unit.MakeNeutralStatHUD();
                     }
                 }
             }

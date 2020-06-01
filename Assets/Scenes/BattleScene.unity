@@ -15147,7 +15147,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1407843546}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1996777839}
+        m_TargetAssemblyTypeName: Assets.GameLogic.GameUI, Assembly-CSharp
+        m_MethodName: ExitToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1407843546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20532,15 +20544,14 @@ MonoBehaviour:
   darkInfoBTSprite: {fileID: 21300000, guid: 10a772a9bb96dff41b45f1c4395f1aa6, type: 3}
   lightInfoBTSprite: {fileID: 21300000, guid: 71b89636e30e6a847879777b3c42ec8d, type: 3}
   userControls: {fileID: 1618615373}
-  LightEnergyLableT: {fileID: 961072273}
-  LightEnergyValueT: {fileID: 1386709870}
-  DarkEnergyLableT: {fileID: 731160539}
-  DarkEnergyValueT: {fileID: 2110209253}
+  lightEnergyLableT: {fileID: 961072273}
+  lightEnergyValueT: {fileID: 1386709870}
+  darkEnergyLableT: {fileID: 731160539}
+  darkEnergyValueT: {fileID: 2110209253}
   infoBT: {fileID: 985607827}
-  actionBT:
-  - {fileID: 1464283724}
-  - {fileID: 1660230181}
-  - {fileID: 2053189930}
+  pathMoveBT: {fileID: 1464283724}
+  healBT: {fileID: 1660230181}
+  captureBT: {fileID: 2053189930}
   playerChangingScreen: {fileID: 385263020}
   lightsTurnLable: {fileID: 804586059}
   darksTurnLable: {fileID: 978449051}

@@ -38,10 +38,10 @@ namespace Assets.GameLogic
                         unitSelection.DeselectUnit();
                         break;
 
-                    case ActionDefiner.Action.SelectFriend:
+                    case ActionDefiner.Action.SelectFriend:                        
                         cellSelection.SelectCell(cellManager.GetCell(targetPosition));
                         unitSelection.SelectUnit(unitsList.GetUnit(targetPosition));
-                        unitSelection.GetSelectedUnit().ShowActions();
+                        unitSelection.GetSelectedUnit().ShowActions();                        
                         break;
 
                     case ActionDefiner.Action.SelectEnemy:
@@ -76,6 +76,7 @@ namespace Assets.GameLogic
                     case ActionDefiner.Action.Ignore:
                         break;
                 }
+                GameEvents.GetInstance().ActionDone();
             }
         }
 
@@ -92,7 +93,7 @@ namespace Assets.GameLogic
             {
                 foreach (Unit unit in unitsList.GetAllEnemies())
                 {
-                    unit.outline.RemoveOutline();
+                    unit.statHUD.RemoveHighlighting();
                     unit.HideDamage();
                 }
             }
@@ -111,23 +112,16 @@ namespace Assets.GameLogic
             cellManager.CapturePortal(unitSelection.GetSelectedUnit().transform.position);
             cellSelection.SelectCell(cellManager.GetCell(unitSelection.GetSelectedUnit().transform.position));
             unitSelection.GetSelectedUnit().Disactivate();
-            unitSelection.GetSelectedUnit().HideActions();
-            if(WinCheck())
-            {
-                GameEvents.GetInstance().ShowWinScreen();
-            }
+            unitSelection.GetSelectedUnit().HideActions();            
         }
 
-        private bool WinCheck()
+        public static bool WinCheck()
         {
-            if(cellManager.LightPortalCount() == 0 || cellManager.DarkPortalCount() == 0)
+            if(CellManager.GetInstance().EnemyPortalCount() == 0 && UnitsList.GetInstance().GetAllEnemies().Length == 0)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
                 
     }

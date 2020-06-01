@@ -19,12 +19,15 @@ namespace Assets.GameLogic
         [SerializeField] private Sprite lightInfoBTSprite;
 
         [SerializeField] private GameObject userControls;
-        [SerializeField] private TextMeshProUGUI LightEnergyLableT;
-        [SerializeField] private TextMeshProUGUI LightEnergyValueT;
-        [SerializeField] private TextMeshProUGUI DarkEnergyLableT;
-        [SerializeField] private TextMeshProUGUI DarkEnergyValueT;
+        [SerializeField] private TextMeshProUGUI lightEnergyLableT;
+        [SerializeField] private TextMeshProUGUI lightEnergyValueT;
+        [SerializeField] private TextMeshProUGUI darkEnergyLableT;
+        [SerializeField] private TextMeshProUGUI darkEnergyValueT;
         [SerializeField] private Button infoBT;
-        [SerializeField] private Button[] actionBT;
+        [SerializeField] private Button pathMoveBT;
+        [SerializeField] private Button healBT;
+        [SerializeField] private Button captureBT;
+        private Button[] actionBT;
 
         [SerializeField] private GameObject playerChangingScreen;
         [SerializeField] private GameObject lightsTurnLable;
@@ -43,6 +46,7 @@ namespace Assets.GameLogic
             playerControler = PlayerControler.GetInstance();
             unitSelection = UnitSelection.GetInstance();
             cellManager = CellManager.GetInstance();
+            actionBT = new Button[3] { pathMoveBT, healBT, captureBT };
         }
 
         private void Start()
@@ -50,6 +54,7 @@ namespace Assets.GameLogic
             playerControler = PlayerControler.GetInstance();
             GameEvents.GetInstance().OnWin += ShowWinScreen;
             GameEvents.GetInstance().OnPlayerChanged += RefreshButtons;
+            GameEvents.GetInstance().OnActionDone += RefreshButtons;
             ShowChangingScreen();
             instruction.SetActive(true);
         }
@@ -74,10 +79,10 @@ namespace Assets.GameLogic
         {
             if (playerControler.FirstPlayerTurn())
             {
-                DarkEnergyLableT.gameObject.SetActive(false);
-                DarkEnergyValueT.gameObject.SetActive(false);
-                LightEnergyLableT.gameObject.SetActive(true);
-                LightEnergyValueT.gameObject.SetActive(true);
+                darkEnergyLableT.gameObject.SetActive(false);
+                darkEnergyValueT.gameObject.SetActive(false);
+                lightEnergyLableT.gameObject.SetActive(true);
+                lightEnergyValueT.gameObject.SetActive(true);
 
                 infoBT.image.sprite = lightInfoBTSprite;
 
@@ -88,10 +93,10 @@ namespace Assets.GameLogic
             }
             else
             {
-                DarkEnergyLableT.gameObject.SetActive(true);
-                DarkEnergyValueT.gameObject.SetActive(true);
-                LightEnergyLableT.gameObject.SetActive(false);
-                LightEnergyValueT.gameObject.SetActive(false);
+                darkEnergyLableT.gameObject.SetActive(true);
+                darkEnergyValueT.gameObject.SetActive(true);
+                lightEnergyLableT.gameObject.SetActive(false);
+                lightEnergyValueT.gameObject.SetActive(false);
 
                 infoBT.image.sprite = darkInfoBTSprite;
 
@@ -102,7 +107,8 @@ namespace Assets.GameLogic
             } 
             UpdateEnergyValue();
             userControls.SetActive(true); 
-            playerChangingScreen.SetActive(false); 
+            playerChangingScreen.SetActive(false);
+            RefreshButtons();
         }
 
         public void PassMove()
@@ -122,9 +128,9 @@ namespace Assets.GameLogic
         public void UpdateEnergyValue()
         {
             if (playerControler.FirstPlayerTurn())
-                LightEnergyValueT.text = playerControler.GetEnergy().ToString();
+                lightEnergyValueT.text = playerControler.GetEnergy().ToString();
             else
-                DarkEnergyValueT.text = playerControler.GetEnergy().ToString();
+                darkEnergyValueT.text = playerControler.GetEnergy().ToString();
         }
 
         public void Capture()
@@ -137,7 +143,6 @@ namespace Assets.GameLogic
 
         private void ShowWinScreen()
         {
-            // finish with winScreen
             if(PlayerControler.GetInstance().FirstPlayerTurn())
             {
                 lightLableT.SetActive(true);
@@ -152,7 +157,7 @@ namespace Assets.GameLogic
                 darkLableT.SetActive(true);
                 darkButtonT.SetActive(true);
             }
-            winBoxT.text = PlayerControler.GetInstance().GetCurrentPlayer().ToString() + "'s win!";
+            winBoxT.text = PlayerControler.GetInstance().GetCurrentPlayer().ToString() + "s win!";
             winScreen.SetActive(true);
         }
 
@@ -168,10 +173,32 @@ namespace Assets.GameLogic
 
         public void RefreshButtons()
         {
-            for(int i = 1; i < actionBT.Length; i++)
+            var unit = unitSelection.GetSelectedUnit();
+            if(unit != null)
             {
-                actionBT[i].interactable = true;
+                if(!unit.WasMoved())
+                {
+                    if((int)unit.GetUnitTeam() == (int)playerControler.GetCurrentPlayer())
+                    {
+                        healBT.interactable = true;
+                    }
+                    if(CellSelection.GetInstance().GetSelectedCell().type == Cell.CellType.LightPortal && unit.GetUnitTeam() == Unit.Team.Dark)
+                    {
+                        captureBT.interactable = true;
+                    }
+                    if (CellSelection.GetInstance().GetSelectedCell().type == Cell.CellType.DarkPortal && unit.GetUnitTeam() == Unit.Team.Light)
+                    {
+                        captureBT.interactable = true;
+                    }
+                    if(CellSelection.GetInstance().GetSelectedCell().type == Cell.CellType.Portal)
+                    {
+                        captureBT.interactable = true;
+                    }
+                    return;
+                }
             }
+            healBT.interactable = false;
+            captureBT.interactable = false;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Assets.GameLogic
 {
     public class Unit : MonoBehaviour
     {
-        public UnitClasses.UnitOutline outline;
+        public UnitClasses.StatHUD statHUD;
         public Sprite sprite;
         public UnitState state;
         [SerializeField] private Team team;
@@ -30,9 +30,10 @@ namespace Assets.GameLogic
         private int health;
         private bool isActive;
         private bool wasMoved;
-        private TextMeshProUGUI statHUD;
         private CellManager cellManager;
         private UnitsList unitsList;
+
+        // TODO: dieing animation
         
         public enum UnitState
         {
@@ -53,15 +54,12 @@ namespace Assets.GameLogic
         {
             cellManager = CellManager.GetInstance();
             unitsList = UnitsList.GetInstance();
-            statHUD = GetComponentInChildren<TextMeshProUGUI>();
-            pathFinder = PathFinder.GetInstance();
-            outline.RemoveOutline();
+            pathFinder = PathFinder.GetInstance();            
             attackPower = basicAttackPower;
             health = maxHealth;
-            statHUD.text = health.ToString();
-            MakeFriendlyStatHUD();
             isActive = false;
             state = UnitState.IDLE;
+            statHUD.SetHUDText(health.ToString());
         }
 
         public Team GetUnitTeam()
@@ -69,15 +67,16 @@ namespace Assets.GameLogic
             return team;
         }
 
-        public void ShowDamage(int value)
+        public void ShowDamage(int damage)
         {
-            statHUD.text = health.ToString() + "-" + value;
+            statHUD.SetHUDText(health.ToString() + "-" + damage.ToString());
         }
 
         public void HideDamage()
         {
-            statHUD.text = health.ToString();
+            statHUD.SetHUDText(health.ToString());
         }
+        
 
         public int GetPrice()
         {
@@ -86,32 +85,14 @@ namespace Assets.GameLogic
 
         public void Heal()
         {
-            if (!wasMoved && state == UnitState.IDLE|| state == UnitState.Waiting)
+            if (!wasMoved && state == UnitState.IDLE || state == UnitState.Waiting)
             {
-                //StartCoroutine(Healing());
+                wasMoved = true;
                 state = UnitState.Healing;
                 animator.SetInteger("State", (int)state);
                 health += 10;
-                statHUD.text = health.ToString();
+                statHUD.SetHUDText(health.ToString());
             }
-        }
-                
-        private IEnumerator Healing()
-        {
-            Debug.Log("Healing was started");
-            isActive = false;
-            state = UnitState.Healing;
-            float healingSpeed = 0.01f;
-            float a = 1f;
-            SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
-            while (renderer.color != new Color(1f, 1f, 0f, 1f))
-            {
-                renderer.color = new Color(1f, 1f, a - healingSpeed, 1f);
-                yield return null;
-            }
-            health += 10;
-            state = UnitState.IDLE;
-            Debug.Log("Healing ends");
         }
 
         public void AnimationFinished()
@@ -127,8 +108,6 @@ namespace Assets.GameLogic
             {
                 //move
                 var path = pathFinder.FindPath(destination);
-                //transform.position = path[path.Length - 1].transform.position;
-                //ShowActions();
                 StartCoroutine(Moving(path));                
             }
             else
@@ -172,9 +151,24 @@ namespace Assets.GameLogic
             Debug.Log("Moving was stopped");
         }
 
+        public void MakeFriendlyStatHUD()
+        {
+            statHUD.HighlightAsFriend();
+        }
+
         public int GetAttackPower()
         {
             return attackPower;
+        }
+
+        public void MakeEnemyStatHUD()
+        {
+            statHUD.HighlightAsEnemy();
+        }
+
+        public void MakeNeutralStatHUD()
+        {
+            statHUD.RemoveHighlighting();
         }
 
         public int GetSpeed()
@@ -186,7 +180,7 @@ namespace Assets.GameLogic
         {
             StartCoroutine(Attacking(targetPosition));
             Disactivate();
-            outline.RemoveOutline();
+            statHUD.RemoveHighlighting();
         }
 
         private IEnumerator Attacking(Vector3 target)
@@ -218,7 +212,7 @@ namespace Assets.GameLogic
             }
             else
             {
-                statHUD.text = health.ToString();
+                statHUD.SetHUDText(health.ToString());
             }
 
         }
@@ -234,7 +228,7 @@ namespace Assets.GameLogic
 
         public void Disactivate()
         {
-            outline.RemoveOutline();
+            statHUD.RemoveHighlighting();
             isActive = false;
             wasMoved = true;
         }
@@ -261,18 +255,6 @@ namespace Assets.GameLogic
         {
             isActive = true;
             wasMoved = false;
-        }
-
-        public void MakeEnemyStatHUD()
-        {
-            statHUD.faceColor = new Color(1f, 0f, 0f, 1f);
-            statHUD.outlineColor = new Color(165 / 256f, 165 / 256f, 165 / 256f, 1f);
-        }
-
-        public void MakeFriendlyStatHUD()
-        {
-            statHUD.faceColor = new Color(1f, 200 / 256f, 0f, 1f);
-            statHUD.outlineColor = new Color(168 / 256f, 150 / 256f, 36 / 256f, 1f);
         }
 
         public object[] GetUnitInfo()
@@ -303,7 +285,7 @@ namespace Assets.GameLogic
             {
                 foreach (Unit unit in unitsList.GetAllEnemies())
                 {
-                    unit.outline.RemoveOutline();
+                    unit.statHUD.RemoveHighlighting();
                     unit.HideDamage();
                 }
             }
@@ -322,7 +304,7 @@ namespace Assets.GameLogic
                 {
                     var availableCells = pathFinder.GetAvailableCells();
                     Debug.Log("Available cells : " + availableCells.Count);
-                    foreach (Cell cell in cellManager.GetAllCells()) // highlight available cells
+                    foreach (Cell cell in cellManager.GetAllCells())
                     {
                         if (cell != null)
                         {
@@ -336,10 +318,9 @@ namespace Assets.GameLogic
                 bool f = false;
                 foreach (Unit unit in unitsList.GetAllEnemies())
                 {
-                    //if (pathFinder.CanAttack(unit.transform.position))
                     if (Vector3.Distance(unit.transform.position, transform.position) < GetRange() + 0.1f)
                     {
-                        unit.outline.OutlineAsEnemy();
+                        unit.statHUD.HighlightAsEnemy();
                         unit.ShowDamage(attackPower);
                         cellManager.GetCell(unit.transform.position).GetComponent<Renderer>().material.color = Color.white;
                         f = true;

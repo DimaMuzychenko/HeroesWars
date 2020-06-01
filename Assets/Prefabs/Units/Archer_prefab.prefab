@@ -464,7 +464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7504762b324a004caf0e4ce6b9b2cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 2243893700765836848}
+  statHUD: {fileID: 2243893700765836848}
   sprite: {fileID: 21300000, guid: 4d9c4f1b8aa3b214cb85f074b657d462, type: 3}
   state: 0
   team: 0
@@ -490,7 +490,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58f496bee868ece4ba38335c9e72e7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 861107448771721012}
+  statHUD: {fileID: 9032184741725861448}
+  noColor: {r: 1, g: 0.8612467, b: 0.09803921, a: 1}
+  friendColor: {r: 0, g: 1, b: 0, a: 1}
+  enemyColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!95 &1396113476603028681
 Animator:
   serializedVersion: 3
@@ -932,6 +935,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
+--- !u!114 &9032184741725861448 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5170959182965693324, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
+  m_PrefabInstance: {fileID: 4222735781102562756}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6587520675777070166 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7057625461572561298, guid: d257e3af24e571641936af828ddcd7ce, type: 3}
