@@ -19,6 +19,7 @@ namespace Assets.GameLogic
                 instance = Instantiate(prefabsList.GetRightUnit(name), position, Quaternion.identity, CellClasses.CellManager.GetInstance().transform);
             }
             instance.transform.position = position;
+            instance.GetComponent<AudioSource>().volume = MainMenu.soundsVolume;
             return instance;
         }
     }

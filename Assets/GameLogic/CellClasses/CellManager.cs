@@ -21,6 +21,7 @@ namespace Assets.GameLogic.CellClasses
             }
             capturings = new List<Vector3>();
             instance = this;
+            
         }
 
         private void Start()

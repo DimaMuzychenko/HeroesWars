@@ -17,12 +17,12 @@ namespace Assets.GameLogic
         [SerializeField] private int maxHealth;
         [SerializeField] private int basicAttackPower;        
         [SerializeField] private int speed;
-        [SerializeField] private float movementSpeed;
+        [SerializeField] private float movementTime;
         [SerializeField] private int range;
         [SerializeField] private int price;
         [SerializeField] private string description;
 
-
+        [SerializeField] private AudioSource audio;
         [SerializeField] private Animator animator;
 
         private PathFinder pathFinder;  
@@ -32,6 +32,8 @@ namespace Assets.GameLogic
         private bool wasMoved;
         private CellManager cellManager;
         private UnitsList unitsList;
+
+        private bool damageEnemy;
         
         public enum UnitState
         {
@@ -58,6 +60,7 @@ namespace Assets.GameLogic
             isActive = false;
             state = UnitState.IDLE;
             statHUD.SetHUDText(health.ToString());
+            audio = GetComponent<AudioSource>();
         }
 
         public Team GetUnitTeam()
@@ -116,6 +119,8 @@ namespace Assets.GameLogic
             
         }
 
+
+
         private IEnumerator Moving(Cell[] path)
         {
             Debug.Log("Moving was started");
@@ -134,11 +139,10 @@ namespace Assets.GameLogic
                     state = UnitState.MovingLeft;
                 }
                 animator.SetInteger("State", (int)state);
-                while (transform.position != destination)
+                while (progress < 0.2f)
                 {
-                    yield return new WaitForSeconds(0.01f);
-                    progress += 1/30f * movementSpeed;
-                    transform.position = Vector3.Lerp(startPosition, point.transform.position, progress);
+                    progress += Time.deltaTime;
+                    transform.position = Vector3.Lerp(startPosition, point.transform.position, progress/0.2f);
                     yield return null;
                 }
                 startPosition = destination;
@@ -148,6 +152,11 @@ namespace Assets.GameLogic
             animator.SetInteger("State", (int)state);
             ShowActions();
             Debug.Log("Moving was stopped");
+        }
+
+        public void PlaySound()
+        {
+            audio.Play();
         }
 
         public void MakeFriendlyStatHUD()
@@ -182,10 +191,29 @@ namespace Assets.GameLogic
             statHUD.RemoveHighlighting();
         }
 
+        //private IEnumerator Attacking(Vector3 target)
+        //{
+        //    Debug.Log("Attacking was started");
+        //    if(IsOnRightSide(target))
+        //    {
+        //        state = UnitState.AttackingRight;
+        //    }
+        //    else
+        //    {
+        //        state = UnitState.AttackingLeft;
+        //    }
+        //    animator.SetInteger("State", (int)state);
+        //    yield return new WaitForSeconds(0.15f);
+        //    Debug.Log(GetAttackPower() + " points of damage were applied");
+        //    unitsList.GetUnit(target).ApplyDamage(GetAttackPower());
+        //    yield return new WaitForSeconds(0.60f);
+        //    state = UnitState.IDLE;
+        //    Debug.Log("Attacking was stopped");
+        //}
+
         private IEnumerator Attacking(Vector3 target)
         {
-            Debug.Log("Attacking was started");
-            if(IsOnRightSide(target))
+            if (IsOnRightSide(target))
             {
                 state = UnitState.AttackingRight;
             }
@@ -194,15 +222,21 @@ namespace Assets.GameLogic
                 state = UnitState.AttackingLeft;
             }
             animator.SetInteger("State", (int)state);
-            yield return new WaitForSeconds(0.15f);
+            while(!damageEnemy)
+            {
+                yield return null;
+            }
             Debug.Log(GetAttackPower() + " points of damage were applied");
             unitsList.GetUnit(target).ApplyDamage(GetAttackPower());
-            yield return new WaitForSeconds(0.60f);
-            state = UnitState.IDLE;
-            Debug.Log("Attacking was stopped");
+            damageEnemy = false;
         }
 
-        public void ApplyDamage(int damage)
+        public void DamageEnemy()
+        {
+            damageEnemy = true;
+        }
+
+            public void ApplyDamage(int damage)
         {
             health = health - damage;
             if(health < 1)

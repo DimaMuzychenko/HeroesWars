@@ -140,6 +140,7 @@ namespace Assets.GameLogic
                 path.Insert(0, current.cell);
                 current = current.parent;
             }
+            path.RemoveAt(0);
             return path.ToArray();
         }
 

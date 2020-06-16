@@ -23,16 +23,15 @@ public class InputHandler : MonoBehaviour
         mousePresent = Input.mousePresent;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && !isZooming && !isScrolling)
         {
-            if (IsPointerOverUIObject()) // user clicked on UI
+            if (IsPointerOverUIObject())
             {
 
             }
-            else // user clicked on game object
+            else
             {
                 Vector3 inputPosition = grid.CellToWorld(grid.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition)));
                 Debug.Log("Apply input: " + inputPosition);
@@ -56,8 +55,16 @@ public class InputHandler : MonoBehaviour
             StartPosition = GetWorldPosition();
             if(Input.mouseScrollDelta.y != 0)
             {
-                isZooming = true;
-                Camera.main.orthographicSize += Input.mouseScrollDelta.y;
+                if(Camera.main.orthographicSize <= 3.5f && Input.mouseScrollDelta.y < 0)
+                {
+                    isZooming = true;
+                    Camera.main.orthographicSize -= Input.mouseScrollDelta.y;
+                }
+                if (Camera.main.orthographicSize >= 1f && Input.mouseScrollDelta.y > 0)
+                {
+                    isZooming = true;
+                    Camera.main.orthographicSize -= Input.mouseScrollDelta.y;
+                }
             }
             else
             {
