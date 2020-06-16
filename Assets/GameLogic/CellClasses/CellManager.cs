@@ -107,6 +107,7 @@ namespace Assets.GameLogic.CellClasses
 
                         if (PlayerControler.GetInstance().FirstPlayerTurn())
                         {
+                            Debug.Log("!!!");
                             //newPortal = Instantiate(leftPortalPrefab, gameObject.transform);
                             newPortal = Instantiate(leftPortalPrefab, oldPortal.transform.position, GetCell(portalPos).transform.rotation, gameObject.transform);
                         }

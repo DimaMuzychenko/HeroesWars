@@ -32,8 +32,6 @@ namespace Assets.GameLogic
         private bool wasMoved;
         private CellManager cellManager;
         private UnitsList unitsList;
-
-        // TODO: dieing animation
         
         public enum UnitState
         {
@@ -138,7 +136,8 @@ namespace Assets.GameLogic
                 animator.SetInteger("State", (int)state);
                 while (transform.position != destination)
                 {
-                    progress += Time.fixedDeltaTime * movementSpeed;
+                    yield return new WaitForSeconds(0.01f);
+                    progress += 1/30f * movementSpeed;
                     transform.position = Vector3.Lerp(startPosition, point.transform.position, progress);
                     yield return null;
                 }

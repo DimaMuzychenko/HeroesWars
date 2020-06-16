@@ -15,6 +15,7 @@ namespace Assets.GameLogic
 
         private void Awake()
         {
+            Application.targetFrameRate = 30;
             cellSelection = CellSelection.GetInstance();
             unitsList = UnitsList.GetInstance();
             unitSelection = UnitSelection.GetInstance();

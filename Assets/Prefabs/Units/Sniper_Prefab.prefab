@@ -462,16 +462,17 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 817dcef8a5e82864798ba36339de59f1, type: 3}
   state: 0
   team: 1
-  type: 1
-  unitName: Sniper
+  type: 0
+  unitName: "\u0421\u043F\u0430\u0439\u043F\u0435\u0440"
   maxHealth: 120
   basicAttackPower: 50
   speed: 2
-  movementSpeed: 0
+  movementSpeed: 10
   range: 2
   price: 150
-  description: Bloody arrow!
-  animator: {fileID: 0}
+  description: "\u0410\u0442\u0430\u043A\u0443\u0454 \u0442\u0430\u043C, \u0434\u0435
+    \u043D\u0435 \u043E\u0447\u0456\u043A\u0443\u0454\u0448!"
+  animator: {fileID: 2087766771622254932}
 --- !u!114 &-6684831873206282627
 MonoBehaviour:
   m_ObjectHideFlags: 0

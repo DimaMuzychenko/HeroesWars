@@ -55,6 +55,7 @@ namespace Assets.GameLogic
             GameEvents.GetInstance().OnWin += ShowWinScreen;
             GameEvents.GetInstance().OnPlayerChanged += RefreshButtons;
             GameEvents.GetInstance().OnActionDone += RefreshButtons;
+            GameEvents.GetInstance().OnUnitSpawned += UpdateEnergyValue;
             ShowChangingScreen();
             instruction.SetActive(true);
         }
@@ -157,7 +158,14 @@ namespace Assets.GameLogic
                 darkLableT.SetActive(true);
                 darkButtonT.SetActive(true);
             }
-            winBoxT.text = PlayerControler.GetInstance().GetCurrentPlayer().ToString() + "s win!";
+            if(playerControler.FirstPlayerTurn())
+            {
+                winBoxT.text = @"Перемога сил світла!"; 
+            }
+            else
+            {
+                winBoxT.text = @"Перемога сил темряви!";
+            }
             winScreen.SetActive(true);
         }
 

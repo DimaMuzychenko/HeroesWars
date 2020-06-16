@@ -16,6 +16,12 @@ public class InputHandler : MonoBehaviour
     float DistanceBetweenFingers;
     bool isZooming;
     bool isScrolling;
+    bool mousePresent;
+
+    private void Awake()
+    {
+        mousePresent = Input.mousePresent;
+    }
 
     // Update is called once per frame
     void Update()
@@ -34,7 +40,7 @@ public class InputHandler : MonoBehaviour
             }
         }
 
-        if (Input.mousePresent)
+        if (mousePresent)
         {
             if(Input.GetMouseButton(1))
             {

@@ -57,4 +57,13 @@ public class GameEvents
             OnActionDone();
         }
     }
+
+    public event Action OnUnitSpawned;
+    public void UnitSpawned()
+    {
+        if(OnUnitSpawned != null)
+        {
+            OnUnitSpawned();
+        }
+    }
 }

@@ -20,7 +20,7 @@ public class Instruction : MonoBehaviour
         previousBT.SetActive(false);
         fightBT.SetActive(false);
         nextBT.SetActive(true);
-        stepT.text = "Step " + currentStep.ToString();
+        stepT.text = currentStep.ToString() + @"/" + instruction.Length.ToString();
     }
 
     public void ShowNextStep()
@@ -34,7 +34,7 @@ public class Instruction : MonoBehaviour
             fightBT.SetActive(true);
         }
         previousBT.SetActive(true);
-        stepT.text = "Step " + currentStep.ToString();
+        stepT.text = currentStep.ToString() + @"/" + instruction.Length.ToString();
     }
 
     public void ShowPreviousStep()
@@ -48,7 +48,7 @@ public class Instruction : MonoBehaviour
         }
         fightBT.SetActive(false);
         nextBT.SetActive(true);
-        stepT.text = "Step " + currentStep.ToString();
+        stepT.text = currentStep.ToString() + @"/" + instruction.Length.ToString();
     }
 
     public void Close()

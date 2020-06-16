@@ -136,15 +136,16 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: f03328b9b17b40748b691a86609812f2, type: 3}
   state: 0
   team: 1
-  type: 1
-  unitName: Mercenary
+  type: 0
+  unitName: "\u041D\u0430\u0439\u043C\u0430\u043D\u0435\u0446\u044C"
   maxHealth: 150
   basicAttackPower: 30
-  speed: 3
-  movementSpeed: 0.5
+  speed: 2
+  movementSpeed: 10
   range: 1
   price: 100
-  description: Loves money!
+  description: "\u0411\u0456\u043B\u044C\u0448 \u0437\u0430 \u0432\u0441\u0435 \u043F\u043E\u043B\u044E\u0431\u043B\u044F\u0454
+    \u0433\u0440\u043E\u0448\u0456!"
   animator: {fileID: -5167139831513362119}
 --- !u!114 &8988419623628644029
 MonoBehaviour:

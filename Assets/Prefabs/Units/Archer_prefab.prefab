@@ -469,14 +469,15 @@ MonoBehaviour:
   state: 0
   team: 0
   type: 0
-  unitName: Archer
+  unitName: "\u041C\u0438\u0441\u043B\u0438\u0432\u0435\u0446\u044C"
   maxHealth: 120
   basicAttackPower: 50
   speed: 2
-  movementSpeed: 0.5
+  movementSpeed: 10
   range: 2
   price: 150
-  description: Sharp eye!
+  description: "\u0412\u043B\u0443\u0447\u0438\u0442\u044C \u043D\u0435 \u0442\u0456\u043B\u044C\u043A\u0438
+    \u0443 \u044F\u0431\u043B\u0443\u043A\u043E \u043D\u0430 \u0433\u043E\u043B\u043E\u0432\u0456!"
   animator: {fileID: 1396113476603028681}
 --- !u!114 &2243893700765836848
 MonoBehaviour:

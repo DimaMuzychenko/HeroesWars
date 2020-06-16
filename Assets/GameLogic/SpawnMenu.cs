@@ -86,6 +86,7 @@ public class SpawnMenu : MonoBehaviour
         unitSelection.SelectUnit(newUnit);
 
         PlayerControler.GetInstance().SpendEnergy(selectedUnit.GetPrice());
+        GameEvents.GetInstance().UnitSpawned();
         Close();
     }
 
